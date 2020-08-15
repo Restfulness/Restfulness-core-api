@@ -19,6 +19,21 @@ parser = reqparse.RequestParser()
 parser.add_argument('task')
 
 
+"""
+@app.route('/todos', methods=['POST'])
+def add_task():
+    if not request.json or not 'task' in request.json:
+        abort(400)
+
+    todo_id = int(max(TODOS.keys()).lstrip('todo')) + 1
+    todo_id = 'todo%i' % todo_id
+    TODOS[todo_id] = {'task': request.json['task']}
+    return TODOS[todo_id], 201
+"""
+
+
+
+
 # Todo
 # shows a single todo item and lets you delete a todo item
 class Todo(Resource):
