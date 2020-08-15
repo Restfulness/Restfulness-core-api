@@ -1,0 +1,2 @@
+flask-restful == 0.3.8
+flask_jwt_extended == 3.24.1
