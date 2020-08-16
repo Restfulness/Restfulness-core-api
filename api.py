@@ -6,6 +6,8 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
+from model.User import User
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -14,16 +16,6 @@ app.config['SECRET_KEY'] = 'super-secret'
 # Setup the Flask-JWT-Extended extension
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
-
-
-class User():
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
-
-    def __str__(self):
-        return "User(id='%s')" % self.id
 
 users = [
     User(1, 'user1', 'zanjan'),
