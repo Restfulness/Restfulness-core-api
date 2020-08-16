@@ -7,6 +7,7 @@ from flask_jwt_extended import (
 )
 
 from model.User import User
+from model.Link import Link
 
 app = Flask(__name__)
 api = Api(app)
@@ -17,10 +18,16 @@ app.config['SECRET_KEY'] = 'super-secret'
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
 
-users = [
-    User(1, 'user1', 'zanjan'),
-    User(2, 'user2', 'berlin'),
+links = [
+    Link("www.stackoverflow.com", ["programming"]),
+    Link("www.geeksforgeeks.com", ["programming", "learning"])
+
 ]
+users = [
+    User(1, 'user1', 'zanjan', links[0]),
+    User(2, 'user2', 'berlin', links),
+]
+
 
 username_table = {u.username: u for u in users}
 userid_table = {u.id: u for u in users}
