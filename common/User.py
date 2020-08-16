@@ -1,5 +1,3 @@
-from .Link import Link
-
 class User():
     def __init__(self, id, username, password, links=[]):
         self.id = id
@@ -12,7 +10,6 @@ class User():
 
     def appendNewLink(self, link):
         self.links.append(link)
-
 
     def __repr__(self):
         return f"User(id='{self.id}')"
