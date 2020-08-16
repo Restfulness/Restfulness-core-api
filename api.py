@@ -28,7 +28,6 @@ users = [
     User(2, 'user2', 'berlin', links),
 ]
 
-
 username_table = {u.username: u for u in users}
 userid_table = {u.id: u for u in users}
 
