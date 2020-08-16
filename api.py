@@ -16,7 +16,7 @@ app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
 
 
-class User(object):
+class User():
     def __init__(self, id, username, password):
         self.id = id
         self.username = username
