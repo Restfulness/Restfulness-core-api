@@ -4,5 +4,5 @@ class User():
         self.username = username
         self.password = password
 
-    def __str__(self):
-        return "User(id='%s')" % self.id
+    def __repr__(self):
+        return f"User(id='{self.id}')"
