@@ -10,6 +10,7 @@ from common.Link import Link
 from common.User import User
 
 from resources.TodoList import TodoList
+from resources.Login import Login
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,7 +20,7 @@ app.config['SECRET_KEY'] = 'super-secret'
 # Setup the Flask-JWT-Extended extension
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
-
+"""
 links = [
     Link("www.stackoverflow.com", ["programming"]),
     Link("www.geeksforgeeks.com", ["programming", "learning"])
@@ -56,6 +57,7 @@ def login():
     else:
         return jsonify({"msg": "Bad username or password"}), 401
 
+"""
 # Protect a view with jwt_required, which requires a valid access token
 # in the request to access.
 @app.route('/protected', methods=['GET'])
@@ -70,6 +72,7 @@ def protected():
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(TodoList, '/todos')
+api.add_resource(Login, '/login')
 
 
 if __name__ == '__main__':
