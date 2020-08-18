@@ -30,7 +30,7 @@ class DbHandler():
 
     @staticmethod
     def addNewUser(username, password):
-        # Chech if user exists
+        # Check if user exists
         for user in users:
             if safe_str_cmp(user.username.encode('utf-8'), username.encode('utf-8')):
                 return 1
@@ -45,3 +45,12 @@ class DbHandler():
         users.append(User(maxId+1, username, password))
 
         return 0
+
+    @staticmethod
+    def getLinks(username):
+        returnMessage = ""
+        for user in users:
+            if user.username == username:
+                returnMessage = user.links
+
+        return returnMessage

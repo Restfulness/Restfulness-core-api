@@ -9,6 +9,7 @@ from flask_jwt_extended import (
 from resources.TodoList import TodoList
 from resources.Login import Login
 from resources.Signup import Signup
+from resources.Links import Links
 
 app = Flask(__name__)
 api = Api(app)
@@ -33,6 +34,7 @@ def protected():
 api.add_resource(TodoList, '/todos')
 api.add_resource(Login, '/login')
 api.add_resource(Signup, '/signup')
+api.add_resource(Links, '/links')
 
 
 if __name__ == '__main__':

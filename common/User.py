@@ -1,9 +1,14 @@
 class User():
-    def __init__(self, id, username, password, links=[]):
-        self.id = id
+    def __init__(self, userId, username, password, links=""):
+        self.id = userId
         self.username = username
         self.password = password
-        self.links = links
+        self.links = []        
+        # Make sure that input is a list
+        if not isinstance(links, list):
+            self.links.append(links)
+        else:
+            self.links = links        
 
     def getLinks(self):
         return self.links

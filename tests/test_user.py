@@ -1,4 +1,4 @@
-# This module tests to see login API works correctly or not
+# This module tests to see APIs that relates to users works correctly or not
 import json
 
 # curl -i -H "Content-Type: application/json" -X POST 
