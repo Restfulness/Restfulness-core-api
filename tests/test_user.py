@@ -19,10 +19,7 @@ def test_login_successful(app, client):
     res = client.post(CONFIG['routes']['user']['login'], data=json.dumps(data), headers=headers)
     global TOKEN
     TOKEN = json.loads(res.get_data(as_text=True))["access_token"]
-    #res = client.get('/')
     assert res.status_code == 200
-    #expected = {'hello': 'world'}
-    #assert expected == json.loads(res.get_data(as_text=True))
 
 
 # curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links

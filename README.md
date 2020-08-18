@@ -23,10 +23,18 @@ Then you can run
 python api.py
 ```
 
+#### Tests
+
+Something that is untested is broken!
+To run tests, make sure you are in root directory of the project (the directory that contains `api.py` file) then run:
+```
+python -m pytest
+```
+
 For more information read this:
 
 * https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
 * https://flask-jwt-extended.readthedocs.io/en/stable/basic_usage
 * https://python-jsonschema.readthedocs.io/en/stable/
+* https://flask.palletsprojects.com/en/1.1.x/testing/
 * http://sqlalchemy.org/
-
