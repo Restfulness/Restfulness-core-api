@@ -2,7 +2,6 @@ from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from resources.TodoList import TodoList
 from resources.Login import Login
 from resources.Signup import Signup
 from resources.Links import Links
@@ -17,7 +16,6 @@ app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
 
 # Routes
-api.add_resource(TodoList, '/todos')
 api.add_resource(Login, '/login')
 api.add_resource(Signup, '/signup')
 api.add_resource(Links, '/links')
