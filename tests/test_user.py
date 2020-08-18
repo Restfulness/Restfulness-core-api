@@ -1,6 +1,11 @@
 # This module tests to see APIs that relates to users works correctly or not
 import json
 
+# Load config file
+with open('config.json', mode='r') as config_file:
+    CONFIG = json.load(config_file)
+
+TOKEN = ""
 # curl -i -H "Content-Type: application/json" -X POST 
 # -d '{"username": "user1", "password": "zanjan"}' localhost:5000/login
 def test_login_successful(app, client):
@@ -11,11 +16,22 @@ def test_login_successful(app, client):
         "username": "user1",
         "password": "zanjan"
     }
-    res = client.post("/login", data=json.dumps(data), headers=headers)
+    res = client.post(CONFIG['routes']['user']['login'], data=json.dumps(data), headers=headers)
+    global TOKEN
+    TOKEN = json.loads(res.get_data(as_text=True))["access_token"]
     #res = client.get('/')
     assert res.status_code == 200
     #expected = {'hello': 'world'}
     #assert expected == json.loads(res.get_data(as_text=True))
+
+
+# curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
+def test_get_list(app, client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(CONFIG['routes']['user']['links'], headers=headers)
+    assert res.status_code == 200
 
 
 # curl -i -H "Content-Type: application/json" -X POST 
@@ -28,7 +44,7 @@ def test_login_failed(app, client):
         "username": "xxxx",
         "password": "yyyy"
     }
-    res = client.post("/login", data=json.dumps(data), headers=headers)
+    res = client.post(CONFIG['routes']['user']['login'], data=json.dumps(data), headers=headers)
     assert res.status_code == 401
 
 
@@ -42,5 +58,5 @@ def test_create_user(app, client):
         "username": "ali",
         "password": "1234"
     }
-    res = client.post("/signup", data=json.dumps(data), headers=headers)
+    res = client.post(CONFIG['routes']['user']['signup'], data=json.dumps(data), headers=headers)
     assert res.status_code == 200
