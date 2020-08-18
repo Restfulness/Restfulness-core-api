@@ -30,3 +30,17 @@ def test_login_failed(app, client):
     }
     res = client.post("/login", data=json.dumps(data), headers=headers)
     assert res.status_code == 401
+
+
+# curl -i -H "Content-Type: application/json" -X POST 
+# -d '{"username": "farbod", "password": "zanjan"}' localhost:5000/signup
+def test_create_user(app, client):
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    data = {
+        "username": "ali",
+        "password": "1234"
+    }
+    res = client.post("/signup", data=json.dumps(data), headers=headers)
+    assert res.status_code == 200
