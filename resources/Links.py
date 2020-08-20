@@ -4,10 +4,13 @@ from flask_restful import Resource
 from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from flasgger import swag_from
+
 from common.DbHandler import DbHandler
 
 class Links(Resource):
     @jwt_required
+    @swag_from('../yml/links.yml')
     def get(self):
         currentUser = get_jwt_identity()
         bookmarkedLinks = DbHandler.getLinks(currentUser)

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
+from flasgger import Swagger
 import json
 
 from resources.Login import Login
@@ -9,12 +10,14 @@ from resources.Links import Links
 
 app = Flask(__name__)
 api = Api(app)
+swagger = Swagger(app)
 
 app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 # Setup the Flask-JWT-Extended extension
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 jwt = JWTManager(app)
+
 
 # Load config file
 with open('config.json', mode='r') as config_file:

@@ -1,4 +1,4 @@
-Login to get a token
+Sign up new user
 ---
 parameters:
   - name: body
@@ -18,20 +18,24 @@ parameters:
           description: Your password
 responses:
   "200":
-    description: "Loged In"
+    description: "Sign Up"
     schema:
       type: object
       properties:
-        access_token:
+        username:
           type: "string"
           format: "string"
-          description: "Given token"
+          description: Username of created user
+        msg:
+          type: "string"
+          format: "string"
+          description: User created
   "401":
-    description: "Failed"
+    description: "Sign up failed"
     schema:
       type: object
       properties:
         msg:
           type: "string"
           format: "string"
-          description: "Bad username or password"
+          description: Username is exists

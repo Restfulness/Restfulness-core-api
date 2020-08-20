@@ -11,7 +11,7 @@ links = [
 ]
 users = [
     User(1, 'user1', 'zanjan', links[0]),
-    User(2, 'user2', 'berlin', links),
+    User(2, 'test', 'test', links),
 ]
 
 class DbHandler():
