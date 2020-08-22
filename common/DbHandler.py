@@ -42,7 +42,11 @@ class DbHandler():
 
         # If user doesn't exist, get Id for it and Signup
         max_id = 0
+<<<<<<< HEAD
         for user in users:
+=======
+        for user in USERS.values():
+>>>>>>> 4864c6f... fixup! Make list validation more clearer
             if user.id > max_id:
                 max_id = user.id
 
