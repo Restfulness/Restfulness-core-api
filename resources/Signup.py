@@ -9,6 +9,7 @@ parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('username', type=str, required=True)
 parser.add_argument('password', type=str, required=True)
 
+
 class Signup(Resource):
     @swag_from('../yml/signup.yml')
     def post(self):
@@ -17,12 +18,16 @@ class Signup(Resource):
         username = args["username"]
         password = args["password"]
 
-        validateSignUp = DbHandler.addNewUser(username, password)
-        
-        returnMessage = ""
-        if validateSignUp == 0:
-            returnMessage = make_response(jsonify(username=username, msg="User created"), 200)
-        elif validateSignUp == 1:
-            returnMessage = make_response(jsonify({"msg": "Username is exists"}), 401)
+        validate_sign_up = DbHandler.add_new_user(username, password)
 
-        return returnMessage
+        return_message = ""
+        if validate_sign_up == 0:
+            return_message = make_response(
+                jsonify(username=username, msg="User created"), 200
+            )
+        elif validate_sign_up == 1:
+            return_message = make_response(
+                jsonify({"msg": "Username is exists"}), 401
+            )
+
+        return return_message

@@ -11,22 +11,27 @@ parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('username', type=str, required=True)
 parser.add_argument('password', type=str, required=True)
 
+
 class Login(Resource):
     @swag_from('../yml/login.yml')
     def post(self):
         args = parser.parse_args()
-        
+
         username = args["username"]
         password = args["password"]
-        
+
         # Check if username and password are correct
-        user = DbHandler.validateLogin(username, password)
-        
-        returnMessage = ""
+        user = DbHandler.validate_login(username, password)
+
+        return_message = ""
         if user:
-            #Identity can be any data that is json serializable
+            # Identity can be any data that is json serializable
             access_token = create_access_token(identity=username)
-            returnMessage = make_response(jsonify(access_token=access_token), 200)
+            return_message = make_response(
+                jsonify(access_token=access_token), 200
+            )
         else:
-            returnMessage = make_response(jsonify({"msg": "Bad username or password"}), 401)
-        return returnMessage
+            return_message = make_response(
+                jsonify({"msg": "Bad username or password"}), 401
+            )
+        return return_message

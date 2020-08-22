@@ -14,43 +14,48 @@ users = [
     User(2, 'test', 'test', links),
 ]
 
+
 class DbHandler():
     @staticmethod
-    def validateLogin(username, password):
+    def validate_login(username, password):
         username_table = {u.username: u for u in users}
         user = username_table.get(username, None)
-        
-        returnMessage = ""
-        if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
-            returnMessage = user
-        else:
-            returnMessage = None
 
-        return returnMessage
+        return_message = ""
+        if user and safe_str_cmp(
+            user.password.encode('utf-8'), password.encode('utf-8')
+        ):
+            return_message = user
+        else:
+            return_message = None
+
+        return return_message
 
     @staticmethod
-    def addNewUser(username, password):
+    def add_new_user(username, password):
         # Check if user exists
         for user in users:
-            if safe_str_cmp(user.username.encode('utf-8'), username.encode('utf-8')):
+            if safe_str_cmp(
+                user.username.encode('utf-8'), username.encode('utf-8')
+            ):
                 return 1
 
         # If user doesn't exist, get Id for it and Signup
-        maxId = 0
+        max_id = 0
         for user in users:
-            if user.id > maxId:
-                maxId = user.id
+            if user.id > max_id:
+                max_id = user.id
 
         # Add new user
-        users.append(User(maxId+1, username, password))
+        users.append(User(max_id+1, username, password))
 
         return 0
 
     @staticmethod
-    def getLinks(username):
-        returnMessage = ""
+    def get_links(username):
+        return_message = ""
         for user in users:
             if user.username == username:
-                returnMessage = user.links
+                return_message = user.links
 
-        return returnMessage
+        return return_message
