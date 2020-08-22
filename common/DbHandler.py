@@ -39,15 +39,7 @@ class DbHandler():
 
         # If user doesn't exist, get Id for it and Signup
         max_id = 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-        for user in users:
-=======
         for user in USERS.values():
->>>>>>> 4864c6f... fixup! Make list validation more clearer
-=======
-        for user in USERS.values:
->>>>>>> 603dcc1... Changed USERS to dictionary and refactored
             if user.id > max_id:
                 max_id = user.id
 
@@ -58,9 +50,4 @@ class DbHandler():
 
     @staticmethod
     def get_links(username):
-        return_message = ""
-        for user in users:
-            if user.username == username:
-                return_message = user.links
-
-        return return_message
+        return USERS.get(username).links

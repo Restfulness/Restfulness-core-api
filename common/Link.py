@@ -1,14 +1,5 @@
 class Link():
-<<<<<<< HEAD
     def __init__(self, address_name, categories=""):
-<<<<<<< HEAD
-=======
-        self.id = id
->>>>>>> 4864c6f... fixup! Make list validation more clearer
-=======
-    def __init__(self, id, address_name, categories):
-        self.id = id
->>>>>>> 603dcc1... Changed USERS to dictionary and refactored
         self.address_name = address_name
         # Make sure that input is a list
         if isinstance(categories, list):
