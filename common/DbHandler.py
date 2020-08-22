@@ -1,4 +1,4 @@
-# TODO: This class is just a prototype and it's just for testing puroses
+# TODO: This class is just a prototype and it's just for testing purposes
 
 from werkzeug.security import safe_str_cmp
 
@@ -9,17 +9,17 @@ links = [
     Link("www.stackoverflow.com", ["programming"]),
     Link("www.geeksforgeeks.com", ["programming", "learning"])
 ]
-users = [
-    User(1, 'user1', 'zanjan', links[0]),
-    User(2, 'test', 'test', links),
-]
+
+USERS = {
+    'user1': User(1, 'user1', 'zanjan', links[0]),
+    'test': User(2, 'test', 'test', links)
+}
 
 
 class DbHandler():
     @staticmethod
     def validate_login(username, password):
-        username_table = {u.username: u for u in users}
-        user = username_table.get(username, None)
+        user = USERS.get(username)
 
         return_message = ""
         if user and safe_str_cmp(
@@ -34,24 +34,25 @@ class DbHandler():
     @staticmethod
     def add_new_user(username, password):
         # Check if user exists
-        for user in users:
-            if safe_str_cmp(
-                user.username.encode('utf-8'), username.encode('utf-8')
-            ):
-                return 1
+        if username in USERS:
+            return 1
 
         # If user doesn't exist, get Id for it and Signup
         max_id = 0
+<<<<<<< HEAD
 <<<<<<< HEAD
         for user in users:
 =======
         for user in USERS.values():
 >>>>>>> 4864c6f... fixup! Make list validation more clearer
+=======
+        for user in USERS.values:
+>>>>>>> 603dcc1... Changed USERS to dictionary and refactored
             if user.id > max_id:
                 max_id = user.id
 
         # Add new user
-        users.append(User(max_id+1, username, password))
+        USERS[username] = User(max_id+1, username, password)
 
         return 0
 
