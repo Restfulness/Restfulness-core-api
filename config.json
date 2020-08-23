@@ -1,0 +1,9 @@
+{
+	"routes": {
+		"user": {
+			"login": "/user/login",
+			"signup": "/user/signup",
+			"links": "/user/links"
+		}
+	}
+}

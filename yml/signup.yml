@@ -1,0 +1,41 @@
+Sign up new user
+---
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - username
+        - password
+      id: User
+      properties:
+        username:
+          type: string
+          description: "Your username"
+        password:
+          type: string
+          description: Your password
+responses:
+  "200":
+    description: "Sign Up"
+    schema:
+      type: object
+      properties:
+        username:
+          type: "string"
+          format: "string"
+          description: Username of created user
+        msg:
+          type: "string"
+          format: "string"
+          description: User created
+  "401":
+    description: "Sign up failed"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: "string"
+          format: "string"
+          description: Username is exists

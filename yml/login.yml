@@ -1,0 +1,37 @@
+Login to get a token
+---
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - username
+        - password
+      id: User
+      properties:
+        username:
+          type: string
+          description: "Your username"
+        password:
+          type: string
+          description: Your password
+responses:
+  "200":
+    description: "Loged In"
+    schema:
+      type: object
+      properties:
+        access_token:
+          type: "string"
+          format: "string"
+          description: "Given token"
+  "401":
+    description: "Failed"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: "string"
+          format: "string"
+          description: "Bad username or password"
