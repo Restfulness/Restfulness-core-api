@@ -44,6 +44,26 @@ def test_get_list(app, client):
     assert res.status_code == 200
 
 
+def test_append_link(client):
+    """
+    curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{"address_name": "test.com", "categories": ["1", "2", "3"]}'
+    http://localhost:5000/user/links
+    """
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {
+        "address_name": "test.com",
+        "categories": ["1", "2", "3"]
+    }
+    res = client.post(CONFIG['routes']['user']['links'], headers=headers,
+                      data=json.dumps(data))
+    assert res.status_code == 200
+
+
 def test_login_failed(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST

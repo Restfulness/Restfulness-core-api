@@ -9,11 +9,11 @@ from common.DbHandler import DbHandler
 from common.Link import Link
 
 parser = reqparse.RequestParser(bundle_errors=True)
-parser.add_argument('address_name', type=str)
+parser.add_argument('address_name', type=str, required=True)
 # Get a list of strings {'categories': ['X', 'Y', 'Z']}
 parser.add_argument(
     'categories', type=str,
-    action='append'
+    required=True, action='append'
 )
 
 
