@@ -19,7 +19,7 @@ parser.add_argument(
 
 class Links(Resource):
     @jwt_required
-    @swag_from('../yml/links.yml')
+    @swag_from('../yml/links_get.yml')
     def get(self):
         current_user = get_jwt_identity()
         bookmarked_links = DbHandler.get_links(current_user)
@@ -31,6 +31,7 @@ class Links(Resource):
         )
 
     @jwt_required
+    @swag_from('../yml/links_post.yml')
     def post(self):
         args = parser.parse_args()
 
