@@ -1,5 +1,14 @@
 Get bookmarks for owner of current token
 ---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
 parameters:
   - in: header
     name: Authorization
@@ -9,12 +18,15 @@ parameters:
       format: uuid
     required: true
 responses:
-  "200":
-    description: "Returned bookmarks"
+  200:
+    description: "Return bookmarks"
     schema:
       type: object
       properties:
-        bookmarked_links:
-          type: "array"
+        address_name:
+          type: array
           items:
             type: string
+          description: "Bookmarked links"
+      example:
+        address_name: ["www.stackoverflow.com", "www.geeksforgeeks.com"]
