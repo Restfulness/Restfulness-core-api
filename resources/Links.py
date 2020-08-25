@@ -52,6 +52,7 @@ class Links(Resource):
             )
 
     @jwt_required
+    @swag_from('../yml/links_delete.yml')
     def delete(self):
         parser.add_argument('address_name', type=str, required=True)
 

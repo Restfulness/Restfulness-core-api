@@ -1,0 +1,54 @@
+Delete bookmark for owner of current token
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    schema:
+      type: string
+      format: uuid
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - address_name
+      properties:
+        address_name:
+          type: string
+          description: "Site Link"
+      example:
+        address_name: "www.stackoverflow.com"
+responses:
+  200:
+    description: "Bookmark Deleted"
+    schema:
+      type: object
+      properties:
+        address_name:
+          type: string
+          description: "Site Link"
+      example:
+        address_name: "www.stackoverflow.com"
+  404:
+    description: "Link doesn't exists"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Link doesn't exists
+      example:
+        msg: Link doesn't exists

@@ -61,17 +61,11 @@ class DbHandler():
     def remove_link(username: str, address_name: str):
         link_found_status = False
 
-        for link in USERS[username].get_links():
-            print(link.get_address_name())
-
         for (index, link) in enumerate(USERS[username].get_links()):
             if link.get_address_name() == address_name:
                 link_found_status = True
                 del(USERS[username].get_links()[index])
                 break
-
-        for link in USERS[username].get_links():
-            print(link.get_address_name())
 
         if link_found_status:
             return 0
