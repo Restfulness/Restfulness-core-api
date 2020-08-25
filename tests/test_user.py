@@ -64,6 +64,24 @@ def test_append_link(client):
     assert res.status_code == 200
 
 
+def test_delete_link(client):
+    """
+    curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X DELETE -d '{"address_name": "test.com"}' localhost:5000/user/links
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {
+        "address_name": "test.com"
+    }
+
+    res = client.delete(CONFIG['routes']['user']['links'], headers=headers,
+                        data=json.dumps(data))
+    assert res.status_code == 200
+
+
 def test_login_failed(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST
