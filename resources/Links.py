@@ -8,6 +8,8 @@ from flasgger import swag_from
 from common.DbHandler import DbHandler
 from common.Link import Link
 
+import validators
+
 parser = reqparse.RequestParser(bundle_errors=True)
 
 
@@ -39,6 +41,12 @@ class Links(Resource):
         current_user = get_jwt_identity()
         address_name = args['address_name']
         categories = args['categories']
+        # Validate link
+        if not validators.url(address_name):
+            return make_response(
+                jsonify(msg="Link is not valid. Valid link looks like: " +
+                        "http://example.com or https://example.com"), 400)
+
         new_link = Link(address_name, categories)
 
         if DbHandler.append_new_link(current_user, new_link) == 0:
