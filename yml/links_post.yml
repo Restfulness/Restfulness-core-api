@@ -53,8 +53,18 @@ responses:
             type: string
           description: "Categories which this site belongs to"
       example:
-        address_name: "www.stackoverflow.com"
+        address_name: "https://stackoverflow.com"
         categories: ["programming", "developing"]
+  400:
+    description: "Link is not valid"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Link is not valid. Valid link looks like:http://example.com or https://example.com
+      example:
+        msg: Link is not valid. Valid link looks like:http://example.com or https://example.com
   500:
     description: "Failed to add new link"
     schema:
