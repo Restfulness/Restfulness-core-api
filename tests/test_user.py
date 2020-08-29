@@ -56,12 +56,20 @@ def test_append_link(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     data = {
-        "address_name": "test.com",
+        "address_name": "http://test.com",
         "categories": ["1", "2", "3"]
     }
     res = client.post(CONFIG['routes']['user']['links'], headers=headers,
                       data=json.dumps(data))
     assert res.status_code == 200
+
+    data = {
+        "address_name": "test.com",
+        "categories": ["1", "2", "3"]
+    }
+    res = client.post(CONFIG['routes']['user']['links'], headers=headers,
+                      data=json.dumps(data))
+    assert res.status_code == 400
 
 
 def test_delete_link(client):
@@ -74,7 +82,7 @@ def test_delete_link(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     data = {
-        "address_name": "test.com"
+        "address_name": "http://test.com"
     }
 
     res = client.delete(CONFIG['routes']['user']['links'], headers=headers,
