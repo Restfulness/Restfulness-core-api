@@ -12,7 +12,7 @@ HEADERS = {
 TOKEN = ""
 
 
-def test_login_successful(app, client):
+def test_login_accepted(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST
     -d '{"username": "user1", "password": "zanjan"}' localhost:5000/login
@@ -26,12 +26,13 @@ def test_login_successful(app, client):
         CONFIG['routes']['user']['login'], data=json.dumps(data),
         headers=HEADERS
     )
+
     global TOKEN
     TOKEN = json.loads(res.get_data(as_text=True))["access_token"]
     assert res.status_code == 200
 
 
-def test_get_list(app, client):
+def test_get_list_accepted(app, client):
     """
     curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
     """
@@ -44,10 +45,11 @@ def test_get_list(app, client):
     assert res.status_code == 200
 
 
-def test_append_link(client):
+def test_append_link_valid_data_accepted(client):
     """
-    curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
-    -X POST -d '{"address_name": "test.com", "categories": ["1", "2", "3"]}'
+    curl -i -H "Content-Type: application/json"
+    -X POST -H "Authorization: Bearer $x"
+    -d '{"address_name": "http://test.com","categories": ["1", "2", "3"]}'
     http://localhost:5000/user/links
     """
 
@@ -59,20 +61,34 @@ def test_append_link(client):
         "address_name": "http://test.com",
         "categories": ["1", "2", "3"]
     }
+
     res = client.post(CONFIG['routes']['user']['links'], headers=headers,
                       data=json.dumps(data))
     assert res.status_code == 200
 
+
+def test_append_link_invalid_data_rejected(client):
+    """
+    curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{"address_name": "test.com", "categories": ["1", "2", "3"]}'
+    http://localhost:5000/user/links
+    """
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
     data = {
         "address_name": "test.com",
         "categories": ["1", "2", "3"]
     }
+
     res = client.post(CONFIG['routes']['user']['links'], headers=headers,
                       data=json.dumps(data))
     assert res.status_code == 400
 
 
-def test_delete_link(client):
+def test_delete_link_accepted(client):
     """
     curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
     -X DELETE -d '{"address_name": "test.com"}' localhost:5000/user/links
@@ -100,6 +116,7 @@ def test_login_failed(app, client):
         "username": "xxxx",
         "password": "yyyy"
     }
+
     res = client.post(
         CONFIG['routes']['user']['login'], data=json.dumps(data),
         headers=HEADERS
@@ -107,7 +124,7 @@ def test_login_failed(app, client):
     assert res.status_code == 401
 
 
-def test_create_user(app, client):
+def test_create_user_accepted(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST
     -d '{"username": "farbod", "password": "zanjan"}' localhost:5000/signup
@@ -121,4 +138,5 @@ def test_create_user(app, client):
         CONFIG['routes']['user']['signup'], data=json.dumps(data),
         headers=HEADERS
     )
+
     assert res.status_code == 200
