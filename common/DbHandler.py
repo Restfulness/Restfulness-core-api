@@ -1,4 +1,4 @@
-# TODO: This class is just a prototype and it's just for testing purposes
+# NOTE: This class is just a prototype and it's just for testing purposes
 
 from werkzeug.security import safe_str_cmp
 
@@ -18,7 +18,7 @@ USERS = {
 
 class DbHandler():
     @staticmethod
-    def validate_login(username, password):
+    def validate_login(username: str, password: str):
         user = USERS.get(username)
 
         return_message = ""
@@ -32,7 +32,7 @@ class DbHandler():
         return return_message
 
     @staticmethod
-    def add_new_user(username, password):
+    def add_new_user(username: str, password: str):
         # Check if user exists
         if username in USERS:
             return 1
@@ -49,5 +49,25 @@ class DbHandler():
         return 0
 
     @staticmethod
-    def get_links(username):
+    def get_links(username: str):
         return USERS.get(username).links
+
+    @staticmethod
+    def append_new_link(username: str, new_link: Link):
+        USERS[username].append_new_link(new_link)
+        return 0
+
+    @staticmethod
+    def remove_link(username: str, address_name: str):
+        link_found_status = False
+
+        for (index, link) in enumerate(USERS[username].get_links()):
+            if link.get_address_name() == address_name:
+                link_found_status = True
+                del(USERS[username].get_links()[index])
+                break
+
+        if link_found_status:
+            return 0
+        else:
+            return 1

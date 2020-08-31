@@ -1,0 +1,77 @@
+Add new bookmark for owner of current token
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    schema:
+      type: string
+      format: uuid
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - address_name
+        - categories
+      properties:
+        address_name:
+          type: string
+          description: "Site Link"
+        categories:
+          type: array
+          items:
+            type: string
+          description: "Categories which this site belongs to"
+      example:
+        address_name: "www.stackoverflow.com"
+        categories: ["programming", "developing"]
+responses:
+  200:
+    description: "Bookmark Added"
+    schema:
+      type: object
+      properties:
+        address_name:
+          type: string
+          description: "Site Link"
+        categories:
+          type: array
+          items:
+            type: string
+          description: "Categories which this site belongs to"
+      example:
+        address_name: "https://stackoverflow.com"
+        categories: ["programming", "developing"]
+  400:
+    description: "Link is not valid"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Link is not valid. Valid link looks like:http://example.com or https://example.com
+      example:
+        msg: Link is not valid. Valid link looks like:http://example.com or https://example.com
+  500:
+    description: "Failed to add new link"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Failed to add new link
+      example:
+        msg: Failed to add new link
