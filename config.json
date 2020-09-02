@@ -5,5 +5,11 @@
 			"signup": "/user/signup",
 			"links": "/user/links"
 		}
+	},
+	"database": {
+		"username": "test",
+		"password": "test",
+		"server": "localhost",
+		"db": "restfulness"
 	}
 }
