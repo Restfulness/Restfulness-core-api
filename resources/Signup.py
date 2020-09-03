@@ -27,7 +27,7 @@ class Signup(Resource):
             )
         elif validate_sign_up == 1:
             return_message = make_response(
-                jsonify({"msg": "Username is exists"}), 401
+                jsonify({"msg": "Username exists"}), 403
             )
 
         return return_message

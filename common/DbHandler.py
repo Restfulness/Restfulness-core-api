@@ -1,17 +1,16 @@
-# NOTE: This class is just a prototype and it's just for testing purposes
+# NOTE: This class is for handling all calls to database
 
 from common.Link import Link
 from common.User import User
 
 from db import db
 
-links = [
-    Link("www.stackoverflow.com", ["programming"]),
-    Link("www.geeksforgeeks.com", ["programming", "learning"])
-]
-
 
 class DbHandler():
+    @staticmethod
+    def get_user_object(username: str):
+        return User.query.filter_by(username=username).first()
+
     @staticmethod
     def validate_login(username: str, password: str):
         user = User.query.filter_by(username=username).first()
@@ -36,27 +35,23 @@ class DbHandler():
         return 0
 
     @staticmethod
-    def get_links(username: str):
-        # return USERS.get(username).links
+    def append_new_link(new_link: Link):
+        db.session.add(new_link)
+        db.session.commit()
         return 0
 
     @staticmethod
-    def append_new_link(username: str, new_link: Link):
-        # USERS[username].append_new_link(new_link)
-        return 0
+    def remove_link(username: str, link_id: int):
+        user_object = User.query.filter_by(username=username).first()
+        link_object = Link.query.filter_by(id=link_id).first()
 
-    @staticmethod
-    def remove_link(username: str, address_name: str):
-        """link_found_status = False
-
-        for (index, link) in enumerate(USERS[username].get_links()):
-            if link.get_address_name() == address_name:
-                link_found_status = True
-                del(USERS[username].get_links()[index])
-                break
-
-        if link_found_status:
-            return 0
+        # Check if id exists and it's owner sends request
+        if link_object:
+            if link_object.owner_id == user_object.id:
+                Link.query.filter_by(id=link_id).delete()
+                db.session.commit()
+                return 0
+            else:
+                return 1
         else:
-            return 1"""
-        return 0
+            return 2
