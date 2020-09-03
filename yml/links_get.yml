@@ -19,14 +19,14 @@ parameters:
     required: true
 responses:
   200:
-    description: "Return bookmarks"
+    description: "Return bookmarks Id"
     schema:
       type: object
       properties:
-        address_name:
+        bookmarked_links_id:
           type: array
           items:
-            type: string
-          description: "Bookmarked links"
+            type: int
+          description: "Bookmarked links id"
       example:
-        address_name: ["www.stackoverflow.com", "www.geeksforgeeks.com"]
+        bookmarked_links_id: [1, 5]

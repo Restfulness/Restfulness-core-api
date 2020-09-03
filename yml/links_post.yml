@@ -24,10 +24,10 @@ parameters:
     required: true
     schema:
       required:
-        - address_name
+        - url
         - categories
       properties:
-        address_name:
+        url:
           type: string
           description: "Site Link"
         categories:
@@ -36,7 +36,7 @@ parameters:
             type: string
           description: "Categories which this site belongs to"
       example:
-        address_name: "www.stackoverflow.com"
+        url: "https://stackoverflow.com"
         categories: ["programming", "developing"]
 responses:
   200:
@@ -44,7 +44,7 @@ responses:
     schema:
       type: object
       properties:
-        address_name:
+        url:
           type: string
           description: "Site Link"
         categories:
@@ -53,7 +53,7 @@ responses:
             type: string
           description: "Categories which this site belongs to"
       example:
-        address_name: "https://stackoverflow.com"
+        url: "https://stackoverflow.com"
         categories: ["programming", "developing"]
   400:
     description: "Link is not valid"

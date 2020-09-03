@@ -16,6 +16,9 @@ parameters:
         password:
           type: string
           description: Your password
+      example:
+        username: "test"
+        password: "test"
 responses:
   "200":
     description: "Loged In"
@@ -27,7 +30,7 @@ responses:
           format: "string"
           description: "Given token"
   "401":
-    description: "Failed"
+    description: "Login Failed"
     schema:
       type: object
       properties:
@@ -35,3 +38,5 @@ responses:
           type: "string"
           format: "string"
           description: "Bad username or password"
+      example:
+        msg: Bad username or password
