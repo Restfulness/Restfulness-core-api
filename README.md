@@ -23,6 +23,21 @@ Then you can run
 python api.py
 ```
 
+### Database Connection
+
+Before running `api.py`, make sure you have `mysql server` installed and change db connection in
+`config.json`.
+
+To install `mysql server` in Debian based distributions you can run:
+
+```
+sudo apt install mysql-server
+sudo mysql_secure_installation
+```
+
+Now change `username`, `password` and `db` in `config.json` to make the app able to connect
+to database.
+
 #### Tests
 
 Something that is untested is broken!
