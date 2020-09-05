@@ -8,6 +8,8 @@ from resources.Login import Login
 from resources.Signup import Signup
 from resources.Links import Links
 
+from db import db
+
 app = Flask(__name__)
 api = Api(app)
 swagger = Swagger(app)
@@ -31,8 +33,10 @@ app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
-app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
 
 # Routes
 api.add_resource(Login, CONFIG['routes']['user']['login'])
@@ -46,6 +50,5 @@ def create_tables():
 
 
 if __name__ == '__main__':
-    from db import db  # Avoid circular import
-    db.init_app(app)
+    # from db import db  # Avoid circular import
     app.run()
