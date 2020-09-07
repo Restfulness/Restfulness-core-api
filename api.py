@@ -21,10 +21,10 @@ with open('config.json', mode='r') as config_file:
     CONFIG = json.load(config_file)
 
 # Database connection
-database_username = CONFIG['database']['username']
-database_password = CONFIG['database']['password']
-database_server = CONFIG['database']['server']
-database_db = CONFIG['database']['db']
+database_username = CONFIG.get('database', {}).get('username')
+database_password = CONFIG.get('database', {}).get('password')
+database_server = CONFIG.get('database', {}).get('server')
+database_db = CONFIG.get('database', {}).get('db')
 database_uri = (f'mysql+pymysql://{database_username}:{database_password}@'
                 f'{database_server}/{database_db}')
 
@@ -39,9 +39,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 # Routes
-api.add_resource(Login, CONFIG['routes']['user']['login'])
-api.add_resource(Signup, CONFIG['routes']['user']['signup'])
-api.add_resource(Links, CONFIG['routes']['user']['links'])
+api.add_resource(Login, CONFIG.get('routes', {}).get('user').get('login'))
+api.add_resource(Signup, CONFIG.get('routes', {}).get('user').get('signup'))
+api.add_resource(Links, CONFIG.get('routes', {}).get('user').get('links'))
 
 
 @app.before_first_request
@@ -50,5 +50,4 @@ def create_tables():
 
 
 if __name__ == '__main__':
-    # from db import db  # Avoid circular import
     app.run()

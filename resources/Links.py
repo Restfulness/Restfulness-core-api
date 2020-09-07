@@ -35,7 +35,7 @@ class Links(Resource):
         # Get a list of strings {'categories': ['X', 'Y', 'Z']}
         parser.add_argument(
             'categories', type=str,
-            action='append'
+            action='append', required=True
         )
 
         args = parser.parse_args()
