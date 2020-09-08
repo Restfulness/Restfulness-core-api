@@ -56,7 +56,7 @@ responses:
           description: You don't have permission to remove this link
       example:
         msg: You don't have permission to remove this link
-  406:
+  404:
     description: "Link doesn't exists!"
     schema:
       type: object
