@@ -20,11 +20,12 @@ class Links(Resource):
             username=current_user_username
         )
 
-        bookmarked_links_ids = []
-        for link in current_user_object.links:
-            bookmarked_links_ids.append(link.id)
         return make_response(
-            jsonify(bookmarked_links_id=bookmarked_links_ids), 200
+            jsonify(
+                bookmarked_links_id=[
+                    link.id for link in current_user_object.links
+                ]
+            ), 200
         )
 
     @jwt_required
@@ -94,5 +95,5 @@ class Links(Resource):
             )
         elif remove_status == 2:
             return make_response(
-                jsonify(msg="Link doesn't exists!"), 406
+                jsonify(msg="Link doesn't exists!"), 404
             )

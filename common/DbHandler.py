@@ -15,7 +15,7 @@ class DbHandler():
     def validate_login(username: str, password: str):
         user = User.query.filter_by(username=username).first()
 
-        # Chech if user exists and password is correct
+        # Check if user exists and password is correct
         if user and user.check_password(password):
             return user
         else:

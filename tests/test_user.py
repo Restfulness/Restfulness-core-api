@@ -19,8 +19,9 @@ def generate_random_string(length):
     """
     For generating random username
     """
-    letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(length))
+    result_str = ''.join(
+        random.choice(string.ascii_lowercase) for i in range(length)
+    )
     return result_str
 
 
