@@ -21,11 +21,11 @@ class Signup(Resource):
         validate_sign_up = DbHandler.add_new_user(username, password)
 
         return_message = ""
-        if validate_sign_up == 0:
+        if validate_sign_up == "OK":
             return_message = make_response(
                 jsonify(username=username, msg="User created"), 200
             )
-        elif validate_sign_up == 1:
+        elif validate_sign_up == "USER_EXISTS":
             return_message = make_response(
                 jsonify({"msg": "Username exists"}), 403
             )

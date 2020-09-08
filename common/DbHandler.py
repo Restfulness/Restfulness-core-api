@@ -26,19 +26,19 @@ class DbHandler():
         # Check if user exists
         user = User.query.filter_by(username=username).first()
         if user:
-            return 1
+            return "USER_EXISTS"
 
         user = User(username=username, password_hash=password)
         db.session.add(user)
         db.session.commit()
 
-        return 0
+        return "OK"
 
     @staticmethod
     def append_new_link(new_link: Link):
         db.session.add(new_link)
         db.session.commit()
-        return 0
+        return "OK"
 
     @staticmethod
     def remove_link(username: str, link_id: int):
@@ -50,8 +50,8 @@ class DbHandler():
             if link_object.owner_id == user_object.id:
                 Link.query.filter_by(id=link_id).delete()
                 db.session.commit()
-                return 0
+                return "OK"
             else:
-                return 1
+                return "USER_IS_NOT_OWNER"
         else:
-            return 2
+            return "ID_NOT_FOUND"

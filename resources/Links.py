@@ -61,7 +61,7 @@ class Links(Resource):
             categories=categories_str
         )
 
-        if DbHandler.append_new_link(new_link=new_link) == 0:
+        if DbHandler.append_new_link(new_link=new_link) == "OK":
             return make_response(
                 jsonify(url=url, categories=categories),
                 200
@@ -83,17 +83,17 @@ class Links(Resource):
         current_user_username = get_jwt_identity()
 
         remove_status = DbHandler.remove_link(current_user_username, link_id)
-        if remove_status == 0:
+        if remove_status == "OK":
             return make_response(
                 jsonify(msg="Link removed successfully.", link_id=link_id),
                 200
             )
-        elif remove_status == 1:
+        elif remove_status == "USER_IS_NOT_OWNER":
             return make_response(
                 jsonify(msg="You don't have permission to " +
                         "remove this link"), 403
             )
-        elif remove_status == 2:
+        elif remove_status == "ID_NOT_FOUND":
             return make_response(
                 jsonify(msg="Link doesn't exists!"), 404
             )
