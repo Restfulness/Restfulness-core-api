@@ -7,6 +7,7 @@
 		}
 	},
 	"database": {
+		"production": false,
 		"username": "test",
 		"password": "test",
 		"server": "localhost",

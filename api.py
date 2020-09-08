@@ -25,8 +25,11 @@ database_username = CONFIG.get('database', {}).get('username')
 database_password = CONFIG.get('database', {}).get('password')
 database_server = CONFIG.get('database', {}).get('server')
 database_db = CONFIG.get('database', {}).get('db')
-database_uri = (f'mysql+pymysql://{database_username}:{database_password}@'
-                f'{database_server}/{database_db}')
+if CONFIG.get('database', {}).get('production'):
+    database_uri = (f'mysql+pymysql://{database_username}:{database_password}@'
+                    f'{database_server}/{database_db}')
+else:
+    database_uri = 'sqlite:///tests/test.db'
 
 # Configs
 app.debug = True

@@ -25,6 +25,10 @@ python api.py
 
 ### Database Connection
 
+By default, this code uses `tests/test.db` (which is a sqlite) for testing purposes.
+If you want to use `mysql` for production, make sure to change `production` option to `true`
+in `config.json`, then follow instructions below:
+
 Before running `api.py`, make sure you have `mysql server` installed and change db connection in
 `config.json`.
 
