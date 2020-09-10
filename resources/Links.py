@@ -7,6 +7,7 @@ from flasgger import swag_from
 
 from common.DbHandler import DbHandler
 from common.Link import Link
+from common.Category import Category
 
 import validators
 
@@ -43,7 +44,7 @@ class Links(Resource):
 
         current_user_username = get_jwt_identity()
         url = args['url']
-        categories = args['categories']
+        categories_name = args['categories']
         # Validate link
         if not validators.url(url):
             return make_response(
@@ -54,16 +55,26 @@ class Links(Resource):
         current_user_object = DbHandler.get_user_object(
             username=current_user_username
         )
-        categories_str = ','.join(categories)
         new_link = Link(
             url=url,
-            owner=current_user_object,
-            categories=categories_str
+            owner=current_user_object
         )
+        category_objects = [
+            Category(
+                name=category_name,
+                owner=new_link
+            )
+            for category_name in categories_name
+        ]
 
-        if DbHandler.append_new_link(new_link=new_link) == "OK":
+        if (
+            DbHandler.append_new_link(new_link=new_link) == "OK" and
+            DbHandler.append_new_categories(
+                categories=category_objects
+            ) == "OK"
+        ):
             return make_response(
-                jsonify(url=url, categories=categories),
+                jsonify(url=url, categories=categories_name),
                 200
             )
         else:

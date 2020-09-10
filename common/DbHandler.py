@@ -55,3 +55,10 @@ class DbHandler():
                 return "USER_IS_NOT_OWNER"
         else:
             return "ID_NOT_FOUND"
+
+    @staticmethod
+    def append_new_categories(categories: list):
+        for category in categories:
+            db.session.add(category)
+        db.session.commit()
+        return "OK"

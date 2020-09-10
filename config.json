@@ -7,7 +7,7 @@
 		}
 	},
 	"database": {
-		"production": false,
+		"production": true,
 		"username": "test",
 		"password": "test",
 		"server": "localhost",
