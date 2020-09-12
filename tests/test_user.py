@@ -40,7 +40,8 @@ def test_create_random_user_accepted(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG['routes']['user']['signup'], data=json.dumps(data),
+        CONFIG.get('routes', {}).get('user', {}).get('signup'),
+        data=json.dumps(data),
         headers=HEADERS
     )
 
@@ -53,7 +54,8 @@ def test_create_random_user_failed(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG['routes']['user']['signup'], data=json.dumps(data),
+        CONFIG.get('routes', {}).get('user', {}).get('signup'),
+        data=json.dumps(data),
         headers=HEADERS
     )
 
@@ -71,7 +73,8 @@ def test_login_accepted(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG['routes']['user']['login'], data=json.dumps(data),
+        CONFIG.get('routes', {}).get('user', {}).get('login'),
+        data=json.dumps(data),
         headers=HEADERS
     )
 
@@ -86,7 +89,8 @@ def test_login_failed(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG['routes']['user']['login'], data=json.dumps(data),
+        CONFIG.get('routes', {}).get('user', {}).get('login'),
+        data=json.dumps(data),
         headers=HEADERS
     )
     assert res.status_code == 401
@@ -101,7 +105,10 @@ def test_get_list_accepted(app, client):
         'Authorization': f"Bearer {TOKEN}"
     }
 
-    res = client.get(CONFIG['routes']['user']['links'], headers=headers)
+    res = client.get(
+        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        headers=headers
+    )
     assert res.status_code == 200
 
 
@@ -122,8 +129,11 @@ def test_append_link_valid_data_accepted(client):
         "categories": ["search", "google"]
     }
 
-    res = client.post(CONFIG['routes']['user']['links'], headers=headers,
-                      data=json.dumps(data))
+    res = client.post(
+        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        headers=headers,
+        data=json.dumps(data)
+    )
     assert res.status_code == 200
 
 
@@ -137,6 +147,9 @@ def test_append_link_invalid_data_rejected(client):
         "categories": ["1", "2", "3"]
     }
 
-    res = client.post(CONFIG['routes']['user']['links'], headers=headers,
-                      data=json.dumps(data))
+    res = client.post(
+        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        headers=headers,
+        data=json.dumps(data)
+    )
     assert res.status_code == 400

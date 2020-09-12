@@ -42,9 +42,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 # Routes
-api.add_resource(Login, CONFIG.get('routes', {}).get('user').get('login'))
-api.add_resource(Signup, CONFIG.get('routes', {}).get('user').get('signup'))
-api.add_resource(Links, CONFIG.get('routes', {}).get('user').get('links'))
+api.add_resource(
+    Login, CONFIG.get('routes', {}).get('user', {}).get('login')
+)
+api.add_resource(
+    Signup, CONFIG.get('routes', {}).get('user', {}).get('signup')
+)
+api.add_resource(
+    Links, CONFIG.get('routes', {}).get('user', {}).get('links')
+)
 
 
 @app.before_first_request
