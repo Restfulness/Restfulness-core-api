@@ -9,11 +9,11 @@ from db import db
 
 class DbHandler():
     @staticmethod
-    def get_user_object(username: str):
+    def get_user_object(username: str) -> User:
         return User.query.filter_by(username=username).first()
 
     @staticmethod
-    def validate_login(username: str, password: str):
+    def validate_login(username: str, password: str) -> User:
         user = User.query.filter_by(username=username).first()
 
         # Check if user exists and password is correct
@@ -23,7 +23,7 @@ class DbHandler():
             return None
 
     @staticmethod
-    def add_new_user(username: str, password: str):
+    def add_new_user(username: str, password: str) -> str:
         # Check if user exists
         user = User.query.filter_by(username=username).first()
         if user:
@@ -36,7 +36,7 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def append_new_link(new_link: Link, categories_name: list):
+    def append_new_link(new_link: Link, categories_name: list) -> str:
         """Check if category is already exists or not.
         If category exists, create object. Else create new one
         and then connect new link to categories
@@ -55,7 +55,7 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def remove_link(username: str, link_id: int):
+    def remove_link(username: str, link_id: int) -> str:
         user_object = User.query.filter_by(username=username).first()
         link_object = Link.query.filter_by(id=link_id).first()
 
@@ -71,7 +71,7 @@ class DbHandler():
             return "ID_NOT_FOUND"
 
     @staticmethod
-    def append_new_categories(link: Link, categories: list):
+    def append_new_categories(link: Link, categories: list) -> str:
         for category in categories:
             category.related_link.append(link)
         db.session.commit()
