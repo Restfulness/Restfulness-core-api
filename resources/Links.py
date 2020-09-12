@@ -7,7 +7,6 @@ from flasgger import swag_from
 
 from common.DbHandler import DbHandler
 from common.Link import Link
-from common.Category import Category
 
 import validators
 
@@ -59,20 +58,11 @@ class Links(Resource):
             url=url,
             owner=current_user_object
         )
-        category_objects = [
-            Category(
-                name=category_name,
-                owner=new_link
-            )
-            for category_name in categories_name
-        ]
 
-        if (
-            DbHandler.append_new_link(new_link=new_link) == "OK" and
-            DbHandler.append_new_categories(
-                categories=category_objects
-            ) == "OK"
-        ):
+        if DbHandler.append_new_link(
+            new_link=new_link,
+            categories_name=categories_name
+        ) == "OK":
             return make_response(
                 jsonify(url=url, categories=categories_name),
                 200

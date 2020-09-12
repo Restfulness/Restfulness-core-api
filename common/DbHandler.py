@@ -2,6 +2,7 @@
 
 from common.Link import Link
 from common.User import User
+from common.Category import Category
 
 from db import db
 
@@ -35,7 +36,20 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def append_new_link(new_link: Link):
+    def append_new_link(new_link: Link, categories_name: list):
+        """Check if category is already exists or not.
+        If category exists, create object. Else create new one
+        and then connect new link to categories
+        """
+        for category_name in categories_name:
+            category_object = Category.query.filter_by(
+                name=category_name
+            ).first()
+            if not category_object:
+                category_object = Category(name=category_name)
+
+            category_object.related_link.append(new_link)
+
         db.session.add(new_link)
         db.session.commit()
         return "OK"
@@ -57,8 +71,8 @@ class DbHandler():
             return "ID_NOT_FOUND"
 
     @staticmethod
-    def append_new_categories(categories: list):
+    def append_new_categories(link: Link, categories: list):
         for category in categories:
-            db.session.add(category)
+            category.related_link.append(link)
         db.session.commit()
         return "OK"
