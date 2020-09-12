@@ -1,3 +1,7 @@
+"""
+This file is for showing many-to-many relationships between models.
+"""
+
 from db import db
 
 
