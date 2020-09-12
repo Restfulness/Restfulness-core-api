@@ -9,7 +9,7 @@ class User(db.Model):
     links = db.relationship('Link', backref='owner')
 
     def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.password_hash = generate_password_hash(self.password_hash)
 
     def check_password(self, password):
