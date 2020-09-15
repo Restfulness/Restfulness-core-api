@@ -21,11 +21,16 @@ class Links(Resource):
         )
 
         return make_response(
-            jsonify(
-                bookmarked_links_id=[
-                    link.id for link in current_user_object.links
-                ]
-            ), 200
+            jsonify([
+                {
+                    "id": link.id,
+                    "url": link.url,
+                    "categories": [
+                        category.name for category in link.categories
+                    ]
+                }
+                for link in current_user_object.links
+            ]), 200
         )
 
     @jwt_required
