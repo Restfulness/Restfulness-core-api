@@ -64,8 +64,7 @@ class Links(Resource):
             categories_name=categories_name
         ) == "OK":
             return make_response(
-                jsonify(url=url, categories=categories_name),
-                200
+                jsonify(id=new_link.id), 200
             )
         else:
             return make_response(
