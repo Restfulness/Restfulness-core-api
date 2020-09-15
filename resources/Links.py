@@ -77,19 +77,13 @@ class Links(Resource):
 
     @jwt_required
     @swag_from('../yml/links_delete.yml')
-    def delete(self):
-        parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('link_id', type=int, required=True)
-        args = parser.parse_args()
-
-        link_id = args['link_id']
-
+    def delete(self, id):
         current_user_username = get_jwt_identity()
 
-        remove_status = DbHandler.remove_link(current_user_username, link_id)
+        remove_status = DbHandler.remove_link(current_user_username, id)
         if remove_status == "OK":
             return make_response(
-                jsonify(msg="Link removed successfully.", link_id=link_id),
+                jsonify(msg="Link removed successfully.", link_id=id),
                 200
             )
         elif remove_status == "USER_IS_NOT_OWNER":

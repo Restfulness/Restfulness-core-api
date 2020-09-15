@@ -15,6 +15,7 @@ class Link(db.Model):
         secondary=links_to_categories,
         backref=db.backref(
             'related_link',
-            lazy='dynamic'
-        )
+            lazy='dynamic',
+        ),
+        cascade='all, delete'
     )

@@ -13,8 +13,14 @@ class DbHandler():
         return User.query.filter_by(username=username).first()
 
     @staticmethod
+    def get_user_id(username: str) -> int:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+        return user_id[0]
+
+    @staticmethod
     def validate_login(username: str, password: str) -> User:
-        user = User.query.filter_by(username=username).first()
+        user = (User.query.filter_by(username=username).first())
 
         # Check if user exists and password is correct
         if user and user.check_password(password):
@@ -56,13 +62,12 @@ class DbHandler():
 
     @staticmethod
     def remove_link(username: str, link_id: int) -> str:
-        user_object = User.query.filter_by(username=username).first()
         link_object = Link.query.filter_by(id=link_id).first()
 
         # Check if id exists and it's owner sends request
         if link_object:
-            if link_object.owner_id == user_object.id:
-                Link.query.filter_by(id=link_id).delete()
+            if link_object.owner_id == DbHandler.get_user_id(username):
+                db.session.delete(link_object)
                 db.session.commit()
                 return "OK"
             else:
