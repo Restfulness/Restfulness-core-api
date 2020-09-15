@@ -96,8 +96,9 @@ def test_login_failed(app, client):
     assert res.status_code == 401
 
 
-def test_get_list_accepted(app, client):
+def test_get_list_failed(app, client):
     """
+    No link exists now!
     curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
     """
 
@@ -109,7 +110,7 @@ def test_get_list_accepted(app, client):
         CONFIG.get('routes', {}).get('user', {}).get('links'),
         headers=headers
     )
-    assert res.status_code == 200
+    assert res.status_code == 404
 
 
 def test_append_link_valid_data_accepted(client):
@@ -133,6 +134,23 @@ def test_append_link_valid_data_accepted(client):
         CONFIG.get('routes', {}).get('user', {}).get('links'),
         headers=headers,
         data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_list_accepted(app, client):
+    """
+    No link exists now!
+    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
+    """
+
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+
+    res = client.get(
+        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        headers=headers
     )
     assert res.status_code == 200
 

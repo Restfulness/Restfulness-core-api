@@ -48,8 +48,11 @@ api.add_resource(
 api.add_resource(
     Signup, CONFIG.get('routes', {}).get('user', {}).get('signup')
 )
+ROUTES_USER_LINKS = CONFIG.get('routes', {}).get('user', {}).get('links')
 api.add_resource(
-    Links, CONFIG.get('routes', {}).get('user', {}).get('links')
+    Links,
+    ROUTES_USER_LINKS,
+    f'{ROUTES_USER_LINKS}/<int:id>'
 )
 
 

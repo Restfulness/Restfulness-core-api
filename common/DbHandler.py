@@ -76,3 +76,29 @@ class DbHandler():
             category.related_link.append(link)
         db.session.commit()
         return "OK"
+
+    @staticmethod
+    def get_links(username: str, link_id: int) -> list:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+
+        if link_id == -1:
+            link_objects = Link.query.filter_by(owner_id=user_id[0]).all()
+        else:
+            link_objects = Link.query.filter_by(
+                owner_id=user_id[0],
+                id=link_id
+            ).all()
+
+        links_values = [
+            {
+                "id": link.id,
+                "url": link.url,
+                "categories": [
+                    category.name for category in link.categories
+                ]
+            }
+            for link in link_objects
+        ]
+
+        return links_values

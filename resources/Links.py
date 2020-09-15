@@ -14,24 +14,23 @@ import validators
 class Links(Resource):
     @jwt_required
     @swag_from('../yml/links_get.yml')
-    def get(self):
+    def get(self, id=-1):
+        """ If client requests for /links will get whole links;
+        else if requests for /links/[ID] will get specified link.
+        NOTE: -1 is used as sentinel value
+        """
         current_user_username = get_jwt_identity()
-        current_user_object = DbHandler.get_user_object(
-            username=current_user_username
-        )
-
-        return make_response(
-            jsonify([
-                {
-                    "id": link.id,
-                    "url": link.url,
-                    "categories": [
-                        category.name for category in link.categories
-                    ]
-                }
-                for link in current_user_object.links
-            ]), 200
-        )
+        links_list = DbHandler.get_links(current_user_username, id)
+        if links_list:
+            return make_response(
+                jsonify(links_list),
+                200
+            )
+        else:
+            return make_response(
+                jsonify(msg="Link not found!"),
+                404
+            )
 
     @jwt_required
     @swag_from('../yml/links_post.yml')
