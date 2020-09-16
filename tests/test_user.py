@@ -1,29 +1,81 @@
 # This module tests to see APIs that relates to users works correctly or not
+# NOTE: This test should not be used in production server
+# (Due to generating random user in DB)
+# TODO: Make test to be usable in production server
 import json
+import random
+import string
 
 # Load config file
 with open('config.json', mode='r') as config_file:
     CONFIG = json.load(config_file)
-
 HEADERS = {
     'Content-Type': 'application/json'
 }
-
 TOKEN = ""
+NEW_CREATED_LINK_ID = ""
+
+
+def generate_random_string(length):
+    """
+    For generating random username
+    """
+    result_str = ''.join(
+        random.choice(string.ascii_lowercase) for i in range(length)
+    )
+    return result_str
+
+
+USERNAME = f'test_{generate_random_string(8)}'
+PASSWORD = "test"
+
+
+def test_create_random_user_accepted(app, client):
+    """
+    curl -i -H "Content-Type: application/json" -X POST
+    -d '{"username": "RANDOM", "password": "test"}' localhost:5000/user/signup
+    """
+
+    data = {
+        "username": USERNAME,
+        "password": PASSWORD
+    }
+    res = client.post(
+        CONFIG.get('routes', {}).get('user', {}).get('signup'),
+        data=json.dumps(data),
+        headers=HEADERS
+    )
+
+    assert res.status_code == 200
+
+
+def test_create_random_user_failed(app, client):
+    data = {
+        "username": USERNAME,
+        "password": PASSWORD
+    }
+    res = client.post(
+        CONFIG.get('routes', {}).get('user', {}).get('signup'),
+        data=json.dumps(data),
+        headers=HEADERS
+    )
+
+    assert res.status_code == 403
 
 
 def test_login_accepted(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST
-    -d '{"username": "user1", "password": "zanjan"}' localhost:5000/login
+    -d '{"username": "user1", "password": "zanjan"}' localhost:5000/user/login
     """
 
     data = {
-        "username": "user1",
-        "password": "zanjan"
+        "username": USERNAME,
+        "password": PASSWORD
     }
     res = client.post(
-        CONFIG['routes']['user']['login'], data=json.dumps(data),
+        CONFIG.get('routes', {}).get('user', {}).get('login'),
+        data=json.dumps(data),
         headers=HEADERS
     )
 
@@ -32,25 +84,42 @@ def test_login_accepted(app, client):
     assert res.status_code == 200
 
 
-def test_get_list_accepted(app, client):
+def test_login_failed(app, client):
+    data = {
+        "username": "USER_THAT_DOESNT_EXISTS",
+        "password": PASSWORD
+    }
+    res = client.post(
+        CONFIG.get('routes', {}).get('user', {}).get('login'),
+        data=json.dumps(data),
+        headers=HEADERS
+    )
+    assert res.status_code == 401
+
+
+def test_get_list_failed(app, client):
     """
-    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
+    No link exists now!
+    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links/get
     """
 
     headers = {
         'Authorization': f"Bearer {TOKEN}"
     }
 
-    res = client.get(CONFIG['routes']['user']['links'], headers=headers)
-    assert res.status_code == 200
+    res = client.get(
+        CONFIG.get('routes', {}).get('links', {}).get('get_all'),
+        headers=headers
+    )
+    assert res.status_code == 404
 
 
 def test_append_link_valid_data_accepted(client):
     """
     curl -i -H "Content-Type: application/json"
     -X POST -H "Authorization: Bearer $x"
-    -d '{"address_name": "http://test.com","categories": ["1", "2", "3"]}'
-    http://localhost:5000/user/links
+    -d '{"url": "https://google.com","categories": ["search", "google"]}'
+    http://localhost:5000/user/links/add
     """
 
     headers = {
@@ -58,85 +127,107 @@ def test_append_link_valid_data_accepted(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     data = {
-        "address_name": "http://test.com",
-        "categories": ["1", "2", "3"]
+        "url": "https://google.com",
+        "categories": ["search", "google"]
     }
 
-    res = client.post(CONFIG['routes']['user']['links'], headers=headers,
-                      data=json.dumps(data))
+    res = client.post(
+        CONFIG.get('routes', {}).get('links', {}).get('add'),
+        headers=headers,
+        data=json.dumps(data)
+    )
+    global NEW_CREATED_LINK_ID
+    NEW_CREATED_LINK_ID = json.loads(res.get_data(as_text=True))["id"]
+    assert res.status_code == 200
+
+
+def test_get_list_accepted(app, client):
+    """
+    No link exists now!
+    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links/get
+    """
+
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+
+    res = client.get(
+        CONFIG.get('routes', {}).get('links', {}).get('get_all'),
+        headers=headers
+    )
     assert res.status_code == 200
 
 
 def test_append_link_invalid_data_rejected(client):
-    """
-    curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
-    -X POST -d '{"address_name": "test.com", "categories": ["1", "2", "3"]}'
-    http://localhost:5000/user/links
-    """
-
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
     data = {
-        "address_name": "test.com",
+        "url": "test.com",
         "categories": ["1", "2", "3"]
     }
 
-    res = client.post(CONFIG['routes']['user']['links'], headers=headers,
-                      data=json.dumps(data))
+    res = client.post(
+        CONFIG.get('routes', {}).get('links', {}).get('add'),
+        headers=headers,
+        data=json.dumps(data)
+    )
     assert res.status_code == 400
 
 
-def test_delete_link_accepted(client):
+def test_get_link_by_id_accepted(client):
+    """curl -i -H "Authorization: Bearer $x" -X GET localhost:5000/links/get/24
     """
-    curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
-    -X DELETE -d '{"address_name": "test.com"}' localhost:5000/user/links
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'/links/get/{NEW_CREATED_LINK_ID}',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_delete_link_by_id_accepted(client):
+    """curl -i -H "Content-Type: application/json"
+    -H "Authorization: Bearer $x" -X DELETE localhost:5000/user/links/16
     """
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {
-        "address_name": "http://test.com"
-    }
-
-    res = client.delete(CONFIG['routes']['user']['links'], headers=headers,
-                        data=json.dumps(data))
+    res = client.delete(
+        f'/links/delete/{NEW_CREATED_LINK_ID}',
+        headers=headers
+    )
     assert res.status_code == 200
 
 
-def test_login_failed(app, client):
+def test_get_link_by_id_failed(client):
     """
-    curl -i -H "Content-Type: application/json" -X POST
-    -d '{"username": "xxxx", "password": "yyyy"}' localhost:5000/login
+    NO ID EXISTS NOW BECAUSE OF PREVIOUS CALL
     """
-
-    data = {
-        "username": "xxxx",
-        "password": "yyyy"
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
     }
-
-    res = client.post(
-        CONFIG['routes']['user']['login'], data=json.dumps(data),
-        headers=HEADERS
+    res = client.get(
+        f'/links/get/{NEW_CREATED_LINK_ID}',
+        headers=headers
     )
-    assert res.status_code == 401
+    assert res.status_code == 404
 
 
-def test_create_user_accepted(app, client):
+def test_delete_link_by_id_failed(client):
     """
-    curl -i -H "Content-Type: application/json" -X POST
-    -d '{"username": "farbod", "password": "zanjan"}' localhost:5000/signup
+    NO ID EXISTS NOW BECAUSE OF PREVIOUS CALL
     """
-
-    data = {
-        "username": "ali",
-        "password": "1234"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
     }
-    res = client.post(
-        CONFIG['routes']['user']['signup'], data=json.dumps(data),
-        headers=HEADERS
+    res = client.delete(
+        f'/links/delete/{NEW_CREATED_LINK_ID}',
+        headers=headers
     )
-
-    assert res.status_code == 200
+    assert res.status_code == 404

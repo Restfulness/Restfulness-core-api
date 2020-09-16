@@ -1,73 +1,109 @@
-# NOTE: This class is just a prototype and it's just for testing purposes
-
-from werkzeug.security import safe_str_cmp
+# NOTE: This class is for handling all calls to database
 
 from common.Link import Link
 from common.User import User
+from common.Category import Category
 
-links = [
-    Link("www.stackoverflow.com", ["programming"]),
-    Link("www.geeksforgeeks.com", ["programming", "learning"])
-]
-
-USERS = {
-    'user1': User(1, 'user1', 'zanjan', links[0]),
-    'test': User(2, 'test', 'test', links)
-}
+from db import db
 
 
 class DbHandler():
     @staticmethod
-    def validate_login(username: str, password: str):
-        user = USERS.get(username)
-
-        return_message = ""
-        if user and safe_str_cmp(
-            user.password.encode('utf-8'), password.encode('utf-8')
-        ):
-            return_message = user
-        else:
-            return_message = None
-
-        return return_message
+    def get_user_object(username: str) -> User:
+        return User.query.filter_by(username=username).first()
 
     @staticmethod
-    def add_new_user(username: str, password: str):
+    def get_user_id(username: str) -> int:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+        return user_id[0]
+
+    @staticmethod
+    def validate_login(username: str, password: str) -> User:
+        user = (User.query.filter_by(username=username).first())
+
+        # Check if user exists and password is correct
+        if user and user.check_password(password):
+            return user
+        else:
+            return None
+
+    @staticmethod
+    def add_new_user(username: str, password: str) -> str:
         # Check if user exists
-        if username in USERS:
-            return 1
+        user = User.query.filter_by(username=username).first()
+        if user:
+            return "USER_EXISTS"
 
-        # If user doesn't exist, get Id for it and Signup
-        max_id = 0
-        for user in USERS.values():
-            if user.id > max_id:
-                max_id = user.id
+        user = User(username=username, password_hash=password)
+        db.session.add(user)
+        db.session.commit()
 
-        # Add new user
-        USERS[username] = User(max_id+1, username, password)
-
-        return 0
+        return "OK"
 
     @staticmethod
-    def get_links(username: str):
-        return USERS.get(username).links
+    def append_new_link(new_link: Link, categories_name: list) -> str:
+        """Check if category is already exists or not.
+        If category exists, create object. Else create new one
+        and then connect new link to categories
+        """
+        for category_name in categories_name:
+            category_object = Category.query.filter_by(
+                name=category_name
+            ).first()
+            if not category_object:
+                category_object = Category(name=category_name)
+
+            category_object.related_link.append(new_link)
+
+        db.session.add(new_link)
+        db.session.commit()
+        return "OK"
 
     @staticmethod
-    def append_new_link(username: str, new_link: Link):
-        USERS[username].append_new_link(new_link)
-        return 0
+    def remove_link(username: str, link_id: int) -> str:
+        link_object = Link.query.filter_by(id=link_id).first()
 
-    @staticmethod
-    def remove_link(username: str, address_name: str):
-        link_found_status = False
-
-        for (index, link) in enumerate(USERS[username].get_links()):
-            if link.get_address_name() == address_name:
-                link_found_status = True
-                del(USERS[username].get_links()[index])
-                break
-
-        if link_found_status:
-            return 0
+        # Check if id exists and it's owner sends request
+        if link_object:
+            if link_object.owner_id == DbHandler.get_user_id(username):
+                db.session.delete(link_object)
+                db.session.commit()
+                return "OK"
+            else:
+                return "USER_IS_NOT_OWNER"
         else:
-            return 1
+            return "ID_NOT_FOUND"
+
+    @staticmethod
+    def append_new_categories(link: Link, categories: list) -> str:
+        for category in categories:
+            category.related_link.append(link)
+        db.session.commit()
+        return "OK"
+
+    @staticmethod
+    def get_links(username: str, link_id: int) -> list:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+
+        if link_id == -1:
+            link_objects = Link.query.filter_by(owner_id=user_id[0]).all()
+        else:
+            link_objects = Link.query.filter_by(
+                owner_id=user_id[0],
+                id=link_id
+            ).all()
+
+        links_values = [
+            {
+                "id": link.id,
+                "url": link.url,
+                "categories": [
+                    category.name for category in link.categories
+                ]
+            }
+            for link in link_objects
+        ]
+
+        return links_values

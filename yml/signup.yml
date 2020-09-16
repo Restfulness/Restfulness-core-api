@@ -1,5 +1,7 @@
 Sign up new user
 ---
+tags:
+  - name: "User"
 parameters:
   - name: body
     in: body
@@ -16,9 +18,12 @@ parameters:
         password:
           type: string
           description: Your password
+      example:
+        username: "test"
+        password: "test"
 responses:
   "200":
-    description: "Sign Up"
+    description: "Sign Up Successfull"
     schema:
       type: object
       properties:
@@ -30,7 +35,10 @@ responses:
           type: "string"
           format: "string"
           description: User created
-  "401":
+      example:
+        username: test
+        msg: User created
+  "403":
     description: "Sign up failed"
     schema:
       type: object
@@ -38,4 +46,6 @@ responses:
         msg:
           type: "string"
           format: "string"
-          description: Username is exists
+          description: Username exists
+      example:
+        msg: "Username exists"

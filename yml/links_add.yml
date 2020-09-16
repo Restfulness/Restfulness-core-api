@@ -11,23 +11,23 @@ security:
   - bearerAuth: []
 consumes:
   "application/json"
+tags:
+  - name: "Links"
 parameters:
   - in: header
     name: Authorization
     description: "Send like this: Bearer [TOKEN]"
-    schema:
-      type: string
-      format: uuid
+    type: string
     required: true
   - name: body
     in: body
     required: true
     schema:
       required:
-        - address_name
+        - url
         - categories
       properties:
-        address_name:
+        url:
           type: string
           description: "Site Link"
         categories:
@@ -36,7 +36,7 @@ parameters:
             type: string
           description: "Categories which this site belongs to"
       example:
-        address_name: "www.stackoverflow.com"
+        url: "https://stackoverflow.com"
         categories: ["programming", "developing"]
 responses:
   200:
@@ -44,17 +44,11 @@ responses:
     schema:
       type: object
       properties:
-        address_name:
-          type: string
-          description: "Site Link"
-        categories:
-          type: array
-          items:
-            type: string
-          description: "Categories which this site belongs to"
+        id:
+          type: int
+          description: "Id of new added link"
       example:
-        address_name: "https://stackoverflow.com"
-        categories: ["programming", "developing"]
+        id: 12
   400:
     description: "Link is not valid"
     schema:

@@ -9,24 +9,50 @@ components:
       bearerFormat: JWT
 security:
   - bearerAuth: []
+tags:
+  - name: "Links"
 parameters:
-  - in: header
-    name: Authorization
+  - name: Authorization
+    in: header
     description: "Send like this: Bearer [TOKEN]"
-    schema:
-      type: string
-      format: uuid
+    type: string
     required: true
+  - name: "id"
+    in: "path"
+    description: "Link id to get"
+    required: false
+    type: "integer"
+example:
+  Authorization: "Bearer eyJ0eXAiOi...."
+  id: 1
 responses:
   200:
     description: "Return bookmarks"
     schema:
       type: object
       properties:
-        address_name:
+        categories:
           type: array
           items:
             type: string
-          description: "Bookmarked links"
+          description: "Link related categories"
+        url:
+          type: string
+          description: "Link url"
+        id:
+          type: int
+          description: "Id of link"
       example:
-        address_name: ["www.stackoverflow.com", "www.geeksforgeeks.com"]
+        categories: ["programming", "developing", "search"]
+        url: https://stackoverflow.com
+        id: 2
+  404:
+    description: "Link ID not found"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Link not found!
+      example:
+        msg: Link not found!

@@ -1,17 +1,21 @@
-class Link():
-    def __init__(self, address_name, categories=""):
-        self.address_name = address_name
-        # Make sure that input is a list
-        if isinstance(categories, list):
-            self.categories = categories
-        else:
-            self.categories = [categories]
+from db import db
+from common.Relationships import links_to_categories
 
-    def get_categories(self):
-        return self.categories
 
-    def get_address_name(self):
-        return self.address_name
-
-    def append_new_category(self, category):
-        self.categories.append(category)
+class Link(db.Model):
+    """
+    Link model has a one-to-many relationship to User
+    and a many-to-many relationship to Category
+    """
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    url = db.Column(db.String(50))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    categories = db.relationship(
+        'Category',
+        secondary=links_to_categories,
+        backref=db.backref(
+            'related_link',
+            lazy='dynamic',
+        ),
+        cascade='all, delete'
+    )

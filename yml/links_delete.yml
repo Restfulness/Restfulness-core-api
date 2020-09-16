@@ -11,44 +11,51 @@ security:
   - bearerAuth: []
 consumes:
   "application/json"
+tags:
+  - name: "Links"
 parameters:
-  - in: header
-    name: Authorization
+  - name: Authorization
+    in: header
     description: "Send like this: Bearer [TOKEN]"
-    schema:
-      type: string
-      format: uuid
+    type: string
     required: true
-  - name: body
-    in: body
+  - name: "id"
+    in: "path"
+    description: "Link id to delete"
     required: true
-    schema:
-      required:
-        - address_name
-      properties:
-        address_name:
-          type: string
-          description: "Site Link"
-      example:
-        address_name: "www.stackoverflow.com"
+    type: "integer"
 responses:
   200:
-    description: "Bookmark Deleted"
+    description: "Bookmarked link Deleted"
     schema:
       type: object
       properties:
-        address_name:
+        link_id:
+          type: int
+          description: "Link Id"
+        msg:
           type: string
-          description: "Site Link"
+          description: "Link removed successfully."
       example:
-        address_name: "www.stackoverflow.com"
-  404:
-    description: "Link doesn't exists"
+        link_id: "1"
+        msg: "Link removed successfully."
+  403:
+    description: "You don't have permission to remove this link"
     schema:
       type: object
       properties:
         msg:
           type: string
-          description: Link doesn't exists
+          description: You don't have permission to remove this link
       example:
-        msg: Link doesn't exists
+        msg: You don't have permission to remove this link
+  404:
+    description: "Link doesn't found"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Link doesn't exists!
+      example:
+        msg: Link doesn't exists!
