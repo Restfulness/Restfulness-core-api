@@ -13,7 +13,7 @@ import validators
 
 class AddLink(Resource):
     @jwt_required
-    @swag_from('../yml/links_post.yml')
+    @swag_from('../../yml/links_add.yml')
     def post(self):
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('url', type=str, required=True)

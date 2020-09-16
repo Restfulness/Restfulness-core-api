@@ -13,7 +13,7 @@ parser.add_argument('password', type=str, required=True)
 
 
 class Login(Resource):
-    @swag_from('../yml/login.yml')
+    @swag_from('../../yml/login.yml')
     def post(self):
         args = parser.parse_args()
 

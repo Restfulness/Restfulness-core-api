@@ -8,7 +8,7 @@ from common.DbHandler import DbHandler
 
 class DeleteLink(Resource):
     @jwt_required
-    @swag_from('../yml/links_delete.yml')
+    @swag_from('../../yml/links_delete.yml')
     def delete(self, id):
         current_user_username = get_jwt_identity()
 

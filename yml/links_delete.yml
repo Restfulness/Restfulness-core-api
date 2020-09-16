@@ -11,17 +11,22 @@ security:
   - bearerAuth: []
 consumes:
   "application/json"
+tags:
+  - name: "Links"
 parameters:
-  - in: header
-    name: Authorization
+  - name: Authorization
+    in: header
     description: "Send like this: Bearer [TOKEN]"
-    schema:
-      type: string
-      format: uuid
+    type: string
     required: true
+  - name: "id"
+    in: "path"
+    description: "Link id to delete"
+    required: true
+    type: "integer"
 responses:
   200:
-    description: "Bookmark Deleted"
+    description: "Bookmarked link Deleted"
     schema:
       type: object
       properties:
@@ -45,7 +50,7 @@ responses:
       example:
         msg: You don't have permission to remove this link
   404:
-    description: "Link doesn't exists!"
+    description: "Link doesn't found"
     schema:
       type: object
       properties:

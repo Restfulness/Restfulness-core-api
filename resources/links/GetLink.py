@@ -8,7 +8,7 @@ from common.DbHandler import DbHandler
 
 class GetLink(Resource):
     @jwt_required
-    @swag_from('../yml/links_get.yml')
+    @swag_from('../../yml/links_get.yml')
     def get(self, id=-1):
         """ If client requests for /links will get whole links;
         else if requests for /links/[ID] will get specified link.

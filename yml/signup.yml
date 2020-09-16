@@ -1,5 +1,7 @@
 Sign up new user
 ---
+tags:
+  - name: "User"
 parameters:
   - name: body
     in: body

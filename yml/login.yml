@@ -1,5 +1,7 @@
 Login to get a token
 ---
+tags:
+  - name: "User"
 parameters:
   - name: body
     in: body
