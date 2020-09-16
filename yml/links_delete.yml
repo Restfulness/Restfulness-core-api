@@ -19,18 +19,6 @@ parameters:
       type: string
       format: uuid
     required: true
-  - name: body
-    in: body
-    required: true
-    schema:
-      required:
-        - link_id
-      properties:
-        link_id:
-          type: int
-          description: "Link Id"
-      example:
-        link_id: "1"
 responses:
   200:
     description: "Bookmark Deleted"

@@ -4,9 +4,12 @@ from flask_jwt_extended import JWTManager
 from flasgger import Swagger
 import json
 
-from resources.Login import Login
-from resources.Signup import Signup
-from resources.Links import Links
+from resources.user.Login import Login
+from resources.user.Signup import Signup
+from resources.links.AddLink import AddLink
+from resources.links.DeleteLink import DeleteLink
+from resources.links.GetLink import GetLink
+
 
 from db import db
 
@@ -48,11 +51,15 @@ api.add_resource(
 api.add_resource(
     Signup, CONFIG.get('routes', {}).get('user', {}).get('signup')
 )
-ROUTES_USER_LINKS = CONFIG.get('routes', {}).get('user', {}).get('links')
 api.add_resource(
-    Links,
-    ROUTES_USER_LINKS,
-    f'{ROUTES_USER_LINKS}/<int:id>'
+    AddLink, CONFIG.get('routes', {}).get('links', {}).get('add')
+)
+api.add_resource(
+    GetLink, CONFIG.get('routes', {}).get('links', {}).get('get_id'),
+    CONFIG.get('routes', {}).get('links', {}).get('get_all')
+)
+api.add_resource(
+    DeleteLink, CONFIG.get('routes', {}).get('links', {}).get('delete')
 )
 
 

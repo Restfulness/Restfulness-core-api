@@ -2,12 +2,17 @@
 	"routes": {
 		"user": {
 			"login": "/user/login",
-			"signup": "/user/signup",
-			"links": "/user/links"
+			"signup": "/user/signup"
+		},
+		"links":{
+			"add": "/links/add",
+			"delete": "/links/delete/<int:id>",
+			"get_id": "/links/get/<int:id>",
+			"get_all": "/links/get"
 		}
 	},
 	"database": {
-		"production": false,
+		"production": true,
 		"username": "test",
 		"password": "test",
 		"server": "localhost",

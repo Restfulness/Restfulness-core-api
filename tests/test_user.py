@@ -107,7 +107,7 @@ def test_get_list_failed(app, client):
     }
 
     res = client.get(
-        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        CONFIG.get('routes', {}).get('links', {}).get('get_all'),
         headers=headers
     )
     assert res.status_code == 404
@@ -131,7 +131,7 @@ def test_append_link_valid_data_accepted(client):
     }
 
     res = client.post(
-        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        CONFIG.get('routes', {}).get('links', {}).get('add'),
         headers=headers,
         data=json.dumps(data)
     )
@@ -149,7 +149,7 @@ def test_get_list_accepted(app, client):
     }
 
     res = client.get(
-        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        CONFIG.get('routes', {}).get('links', {}).get('get_all'),
         headers=headers
     )
     assert res.status_code == 200
@@ -166,7 +166,7 @@ def test_append_link_invalid_data_rejected(client):
     }
 
     res = client.post(
-        CONFIG.get('routes', {}).get('user', {}).get('links'),
+        CONFIG.get('routes', {}).get('links', {}).get('add'),
         headers=headers,
         data=json.dumps(data)
     )
