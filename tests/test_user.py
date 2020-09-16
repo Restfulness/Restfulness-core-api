@@ -13,6 +13,7 @@ HEADERS = {
     'Content-Type': 'application/json'
 }
 TOKEN = ""
+NEW_CREATED_LINK_ID = ""
 
 
 def generate_random_string(length):
@@ -32,7 +33,7 @@ PASSWORD = "test"
 def test_create_random_user_accepted(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST
-    -d '{"username": "RANDOM", "password": "test"}' localhost:5000/signup
+    -d '{"username": "RANDOM", "password": "test"}' localhost:5000/user/signup
     """
 
     data = {
@@ -65,7 +66,7 @@ def test_create_random_user_failed(app, client):
 def test_login_accepted(app, client):
     """
     curl -i -H "Content-Type: application/json" -X POST
-    -d '{"username": "user1", "password": "zanjan"}' localhost:5000/login
+    -d '{"username": "user1", "password": "zanjan"}' localhost:5000/user/login
     """
 
     data = {
@@ -99,7 +100,7 @@ def test_login_failed(app, client):
 def test_get_list_failed(app, client):
     """
     No link exists now!
-    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
+    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links/get
     """
 
     headers = {
@@ -118,7 +119,7 @@ def test_append_link_valid_data_accepted(client):
     curl -i -H "Content-Type: application/json"
     -X POST -H "Authorization: Bearer $x"
     -d '{"url": "https://google.com","categories": ["search", "google"]}'
-    http://localhost:5000/user/links
+    http://localhost:5000/user/links/add
     """
 
     headers = {
@@ -135,13 +136,15 @@ def test_append_link_valid_data_accepted(client):
         headers=headers,
         data=json.dumps(data)
     )
+    global NEW_CREATED_LINK_ID
+    NEW_CREATED_LINK_ID = json.loads(res.get_data(as_text=True))["id"]
     assert res.status_code == 200
 
 
 def test_get_list_accepted(app, client):
     """
     No link exists now!
-    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links
+    curl -H "Authorization: Bearer TOKEN" http://localhost:5000/links/get
     """
 
     headers = {
@@ -171,3 +174,60 @@ def test_append_link_invalid_data_rejected(client):
         data=json.dumps(data)
     )
     assert res.status_code == 400
+
+
+def test_get_link_by_id_accepted(client):
+    """curl -i -H "Authorization: Bearer $x" -X GET localhost:5000/links/get/24
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'/links/get/{NEW_CREATED_LINK_ID}',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_delete_link_by_id_accepted(client):
+    """curl -i -H "Content-Type: application/json"
+    -H "Authorization: Bearer $x" -X DELETE localhost:5000/user/links/16
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.delete(
+        f'/links/delete/{NEW_CREATED_LINK_ID}',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_id_failed(client):
+    """
+    NO ID EXISTS NOW BECAUSE OF PREVIOUS CALL
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'/links/get/{NEW_CREATED_LINK_ID}',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_delete_link_by_id_failed(client):
+    """
+    NO ID EXISTS NOW BECAUSE OF PREVIOUS CALL
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.delete(
+        f'/links/delete/{NEW_CREATED_LINK_ID}',
+        headers=headers
+    )
+    assert res.status_code == 404
