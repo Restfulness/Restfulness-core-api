@@ -12,10 +12,10 @@
 		}
 	},
 	"database": {
-		"production": false,
-		"username": "test",
-		"password": "test",
-		"server": "localhost",
+		"production": true,
+		"username": "root",
+		"password": "root",
+		"server": "db",
 		"db": "restfulness"
 	}
 }
