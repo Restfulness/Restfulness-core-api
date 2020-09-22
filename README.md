@@ -1,12 +1,28 @@
 # Flask Restfulness
 
+Another boilerplate for flask-restful web service (Including flask-sqlalchemy, flask-jwt, Swagger, Docker, ...)
 
-### Development Environment
+This project is going to be something like [Pocket](https://getpocket.com/) to save your favorite links.
+
+
+### Production Environment (Using Docker)
+
+If you have `docker` and `docker-compose` installed, then simply you can run:
+(Make sure you are in root directory of project which is folder that contains `api.py`)
+```
+docker-compose up
+```
+And that's it :) now you can open `http://localhost:5000/apidocs` to see available APIs.
+
+(To run CI tests using `pytest` in this way, you can simply run `docker-compose run app python -m pytest`; But make sure to wait a few seconds for MySql to get ready)
+
+
+### Development Environment (Without Docker)
 
 At the very beginning, you have to initiate a virtual environment with this:
 
 ```
-sudo apt-get install -y python3-venv
+sudo apt install -y python3-venv
 python3 -m venv venv
 ```
 
@@ -23,11 +39,13 @@ Then you can run
 python api.py
 ```
 
-### Database Connection
+##### Database Connection
 
-By default, this code uses `tests/test.db` (which is a sqlite) for testing purposes.
-If you want to use `mysql` for production, make sure to change `production` option to `true`
-in `config.json`, then follow instructions below:
+This project supports both `MySql` and `SQLite` as its database.
+
+By default, this code uses `MySql` as its main database but if you want to use `SQLite` (which is placed in `tests/test.db`) for testing purposes, make sure to change `mysql` option to `false` in `config.json`.
+
+Else, if you want to continue using `MySql`, please follow instructions below:
 
 Before running `api.py`, make sure you have `mysql server` installed and change db connection in
 `config.json`.
@@ -42,7 +60,7 @@ sudo mysql_secure_installation
 Now change `username`, `password` and `db` in `config.json` to make the app able to connect
 to database.
 
-#### Tests
+### Tests
 
 Something that is untested is broken!
 To run tests, make sure you are in root directory of the project (the directory that contains `api.py` file) then run:
@@ -50,7 +68,7 @@ To run tests, make sure you are in root directory of the project (the directory 
 python -m pytest
 ```
 
-#### API Documentation
+### API Documentation
 To see available APIs, go to http://localhost:5000/apidocs
 (We are using [Flasgger](https://github.com/flasgger/flasgger) for our API's documentation)
 
