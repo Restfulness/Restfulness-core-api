@@ -20,9 +20,18 @@ jobs:
       - name: Build Docker container
         run: docker-compose up -d
 
+<<<<<<< HEAD
       - name: Wait for MySql to get ready for accepting queries
         run: sleep 40s
 
+=======
+<<<<<<< HEAD
+      - name: Wait for MySql to get ready for accepting queries
+        run: sleep 40s
+
+=======
+>>>>>>> 460c1e523079ba087096a7b189b1125b29c58d03
+>>>>>>> 300ce4d6cffbb55cb7f03c0e6a52de66739e9c84
       - name: Test CI with pytest
         run: docker-compose run app python -m pytest -v
 

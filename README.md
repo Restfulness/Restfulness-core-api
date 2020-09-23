@@ -14,8 +14,8 @@ docker-compose up
 ```
 And that's it :) now you can open `http://localhost:5000/apidocs` to see available APIs.
 
-(To run CI tests using `pytest` in this way, you can simply run `docker-compose run app python -m pytest`; But make sure to wait a few seconds for MySql to get ready)
 
+(To run CI tests using `pytest` in this way, you can simply run `docker-compose run app python -m pytest`; But make sure to wait a few seconds for MySql to get ready)
 
 ### Development Environment (Without Docker)
 
