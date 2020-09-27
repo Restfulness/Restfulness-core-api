@@ -1,4 +1,5 @@
 {
+	"host": "0.0.0.0",
 	"routes": {
 		"user": {
 			"login": "/user/login",
