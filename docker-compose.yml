@@ -11,8 +11,6 @@ services:
     db:
         container_name: mysql
         image: mysql:8.0
-        ports:
-            - "32000:3306" # I have mysql-server installed on my machine, so using other port instead of 3306
         environment:
             MYSQL_ROOT_PASSWORD: root
         volumes:
