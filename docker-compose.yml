@@ -12,5 +12,8 @@ services:
         container_name: mysql
         image: mysql:8.0
         environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_ONETIME_PASSWORD: "yes"
             MYSQL_DATABASE: "restfulness"
-            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: "test"
+            MYSQL_PASSWORD: "test"

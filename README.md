@@ -17,6 +17,9 @@ And that's it :) now you can open `http://localhost:5000/apidocs` to see availab
 
 (To run CI tests using `pytest` in this way, you can simply run `docker-compose run app python -m pytest`; But make sure to wait a few seconds for MySql to get ready)
 
+By default, our `docker-compose` configuration will disables `root`'s password for `MySql` after initialization; So app connects to `restfulness` database with `test` user which is created using enviromental variables in `docker-compose.yml` file. If you want to changes this setting, make
+sure to read [MySql Docker Documentation](https://hub.docker.com/_/mysql), then change `docker-compose.yml` and `config.json` correctly.
+
 ### Development Environment (Without Docker)
 
 At the very beginning, you have to initiate a virtual environment with this:

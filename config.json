@@ -14,8 +14,8 @@
 	},
 	"database": {
 		"mysql": true,
-		"username": "root",
-		"password": "root",
+		"username": "test",
+		"password": "test",
 		"server": "db",
 		"db": "restfulness"
 	}
