@@ -1,0 +1,21 @@
+version: "2"
+services:
+    app:
+        container_name: restfulness
+        build: ./
+        links:
+            - db
+        ports:
+            - "5000:5000"
+        restart: unless-stopped
+
+    db:
+        container_name: mysql
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_ONETIME_PASSWORD: "yes"
+            MYSQL_DATABASE: "restfulness"
+            MYSQL_USER: "test"
+            MYSQL_PASSWORD: "test"
+        restart: unless-stopped

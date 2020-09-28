@@ -28,7 +28,7 @@ database_username = CONFIG.get('database', {}).get('username')
 database_password = CONFIG.get('database', {}).get('password')
 database_server = CONFIG.get('database', {}).get('server')
 database_db = CONFIG.get('database', {}).get('db')
-if CONFIG.get('database', {}).get('production'):
+if CONFIG.get('database', {}).get('mysql'):
     database_uri = (f'mysql+pymysql://{database_username}:{database_password}@'
                     f'{database_server}/{database_db}')
 else:
@@ -69,4 +69,4 @@ def create_tables():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host=CONFIG.get('host'))
