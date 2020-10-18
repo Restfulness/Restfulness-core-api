@@ -20,6 +20,10 @@ And that's it :) now you can open `http://localhost:5000/apidocs` to see availab
 By default, our `docker-compose` configuration will disables `root`'s password for `MySql` after initialization; So app connects to `restfulness` database with `test` user which is created using enviromental variables in `docker-compose.yml` file. If you want to changes this setting, make
 sure to read [MySql Docker Documentation](https://hub.docker.com/_/mysql), then change `docker-compose.yml` and `config.json` correctly.
 
+**Note:** By default, Database is persistent using [Docker Volumes](https://docs.docker.com/storage/volumes/), so you don't need to worry about losing your data *unless* you turn off everything using `docker-compose down -v` command. To make a long story short and for more information, take a look
+at [this](https://stackoverflow.com/a/39208187/5229664).
+
+
 ### Development Environment (Without Docker)
 
 At the very beginning, you have to initiate a virtual environment with this:
