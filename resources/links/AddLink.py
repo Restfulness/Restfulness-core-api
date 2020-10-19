@@ -20,7 +20,7 @@ class AddLink(Resource):
         # Get a list of strings {'categories': ['X', 'Y', 'Z']}
         parser.add_argument(
             'categories', type=str,
-            action='append', required=True
+            action='append'
         )
 
         args = parser.parse_args()
