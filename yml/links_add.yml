@@ -36,8 +36,11 @@ parameters:
             type: string
           description: "Categories which this site belongs to"
       example:
-        url: "https://stackoverflow.com"
-        categories: ["programming", "developing"]
+        - categories: ["programming", "developing", "search"]
+          url: "https://stackoverflow.com"
+        - categories: []
+          url: "https://google.com"
+        
 responses:
   200:
     description: "Bookmark Added"
