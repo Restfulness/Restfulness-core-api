@@ -114,7 +114,7 @@ def test_get_list_failed(app, client):
     assert res.status_code == 404
 
 
-def test_append_link_valid_data_accepted(client):
+def test_add_link_valid_data_accepted(client):
     """
     curl -i -H "Content-Type: application/json"
     -X POST -H "Authorization: Bearer $x"
@@ -138,6 +138,30 @@ def test_append_link_valid_data_accepted(client):
     )
     global NEW_CREATED_LINK_ID
     NEW_CREATED_LINK_ID = json.loads(res.get_data(as_text=True))["id"]
+    assert res.status_code == 200
+
+
+def test_add_link_valid_data_without_category_accepted(client):
+    """
+    curl -i -H "Content-Type: application/json"
+    -X POST -H "Authorization: Bearer $x"
+    -d '{"url": "https://google.com"}'
+    http://localhost:5000/user/links/add
+    """
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {
+        "url": "https://google.com"
+    }
+
+    res = client.post(
+        CONFIG.get('routes', {}).get('links', {}).get('add'),
+        headers=headers,
+        data=json.dumps(data)
+    )
     assert res.status_code == 200
 
 

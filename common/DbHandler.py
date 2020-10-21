@@ -47,14 +47,15 @@ class DbHandler():
         If category exists, create object. Else create new one
         and then connect new link to categories
         """
-        for category_name in categories_name:
-            category_object = Category.query.filter_by(
-                name=category_name
-            ).first()
-            if not category_object:
-                category_object = Category(name=category_name)
+        if categories_name:
+            for category_name in categories_name:
+                category_object = Category.query.filter_by(
+                    name=category_name
+                ).first()
+                if not category_object:
+                    category_object = Category(name=category_name)
 
-            category_object.related_link.append(new_link)
+                category_object.related_link.append(new_link)
 
         db.session.add(new_link)
         db.session.commit()
