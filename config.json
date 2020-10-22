@@ -6,14 +6,12 @@
 			"signup": "/user/signup"
 		},
 		"links":{
-			"add": "/links/add",
-			"delete": "/links/delete/<int:id>",
-			"get_id": "/links/get/<int:id>",
-			"get_all": "/links/get"
+			"main": "/links",
+			"get_id": "/links/<int:id>"
 		}
 	},
 	"database": {
-		"mysql": true,
+		"mysql": false,
 		"username": "test",
 		"password": "test",
 		"server": "db",

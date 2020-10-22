@@ -6,10 +6,7 @@ import json
 
 from resources.user.Login import Login
 from resources.user.Signup import Signup
-from resources.links.AddLink import AddLink
-from resources.links.DeleteLink import DeleteLink
-from resources.links.GetLink import GetLink
-
+from resources.links.Links import Links
 
 from db import db
 
@@ -52,14 +49,8 @@ api.add_resource(
     Signup, CONFIG.get('routes', {}).get('user', {}).get('signup')
 )
 api.add_resource(
-    AddLink, CONFIG.get('routes', {}).get('links', {}).get('add')
-)
-api.add_resource(
-    GetLink, CONFIG.get('routes', {}).get('links', {}).get('get_id'),
-    CONFIG.get('routes', {}).get('links', {}).get('get_all')
-)
-api.add_resource(
-    DeleteLink, CONFIG.get('routes', {}).get('links', {}).get('delete')
+    Links, CONFIG.get('routes', {}).get('links', {}).get('main'),
+    CONFIG.get('routes', {}).get('links', {}).get('get_id')
 )
 
 
