@@ -1,4 +1,4 @@
-Delete bookmark for owner of current token
+Delete bookmark for owner of current token by Id
 ---
 openapi: 3.0.0
 components:
