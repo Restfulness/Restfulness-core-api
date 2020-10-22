@@ -12,6 +12,11 @@ with open('config.json', mode='r') as config_file:
 HEADERS = {
     'Content-Type': 'application/json'
 }
+# Routes
+USER_SIGNUP_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('signup')
+USER_LOGIN_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('login')
+LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
+
 TOKEN = ""
 NEW_CREATED_LINK_ID = ""
 
@@ -27,7 +32,7 @@ def generate_random_string(length):
 
 
 USERNAME = f'test_{generate_random_string(8)}'
-PASSWORD = "test"
+PASSWORD = 'test'
 
 
 def test_create_random_user_accepted(app, client):
@@ -41,7 +46,7 @@ def test_create_random_user_accepted(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG.get('routes', {}).get('user', {}).get('signup'),
+        USER_SIGNUP_ROUTE,
         data=json.dumps(data),
         headers=HEADERS
     )
@@ -55,7 +60,7 @@ def test_create_random_user_failed(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG.get('routes', {}).get('user', {}).get('signup'),
+        USER_SIGNUP_ROUTE,
         data=json.dumps(data),
         headers=HEADERS
     )
@@ -74,7 +79,7 @@ def test_login_accepted(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG.get('routes', {}).get('user', {}).get('login'),
+        USER_LOGIN_ROUTE,
         data=json.dumps(data),
         headers=HEADERS
     )
@@ -90,7 +95,7 @@ def test_login_failed(app, client):
         "password": PASSWORD
     }
     res = client.post(
-        CONFIG.get('routes', {}).get('user', {}).get('login'),
+        USER_LOGIN_ROUTE,
         data=json.dumps(data),
         headers=HEADERS
     )
@@ -108,7 +113,7 @@ def test_get_list_failed(app, client):
     }
 
     res = client.get(
-        CONFIG.get('routes', {}).get('links', {}).get('get_all'),
+        LINKS_MAIN_ROUTE,
         headers=headers
     )
     assert res.status_code == 404
@@ -132,7 +137,7 @@ def test_add_link_valid_data_accepted(client):
     }
 
     res = client.post(
-        CONFIG.get('routes', {}).get('links', {}).get('add'),
+        LINKS_MAIN_ROUTE,
         headers=headers,
         data=json.dumps(data)
     )
@@ -158,7 +163,7 @@ def test_add_link_valid_data_without_category_accepted(client):
     }
 
     res = client.post(
-        CONFIG.get('routes', {}).get('links', {}).get('add'),
+        LINKS_MAIN_ROUTE,
         headers=headers,
         data=json.dumps(data)
     )
@@ -176,7 +181,7 @@ def test_get_list_accepted(app, client):
     }
 
     res = client.get(
-        CONFIG.get('routes', {}).get('links', {}).get('get_all'),
+        LINKS_MAIN_ROUTE,
         headers=headers
     )
     assert res.status_code == 200
@@ -193,7 +198,7 @@ def test_append_link_invalid_data_rejected(client):
     }
 
     res = client.post(
-        CONFIG.get('routes', {}).get('links', {}).get('add'),
+        LINKS_MAIN_ROUTE,
         headers=headers,
         data=json.dumps(data)
     )
@@ -207,7 +212,7 @@ def test_get_link_by_id_accepted(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     res = client.get(
-        f'/links/get/{NEW_CREATED_LINK_ID}',
+        f'{LINKS_MAIN_ROUTE}/{NEW_CREATED_LINK_ID}',
         headers=headers
     )
     assert res.status_code == 200
@@ -222,7 +227,7 @@ def test_delete_link_by_id_accepted(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     res = client.delete(
-        f'/links/delete/{NEW_CREATED_LINK_ID}',
+        f'{LINKS_MAIN_ROUTE}/{NEW_CREATED_LINK_ID}',
         headers=headers
     )
     assert res.status_code == 200
@@ -236,7 +241,7 @@ def test_get_link_by_id_failed(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     res = client.get(
-        f'/links/get/{NEW_CREATED_LINK_ID}',
+        f'{LINKS_MAIN_ROUTE}/{NEW_CREATED_LINK_ID}',
         headers=headers
     )
     assert res.status_code == 404
@@ -251,7 +256,7 @@ def test_delete_link_by_id_failed(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     res = client.delete(
-        f'/links/delete/{NEW_CREATED_LINK_ID}',
+        f'{LINKS_MAIN_ROUTE}/{NEW_CREATED_LINK_ID}',
         headers=headers
     )
     assert res.status_code == 404

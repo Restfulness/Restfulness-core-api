@@ -88,7 +88,7 @@ class DbHandler():
         user_id = (User.query.
                    with_entities(User.id).filter_by(username=username).first())
 
-        if link_id == -1:
+        if link_id is None:
             link_objects = Link.query.filter_by(owner_id=user_id[0]).all()
         else:
             link_objects = Link.query.filter_by(

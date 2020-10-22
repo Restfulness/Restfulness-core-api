@@ -1,5 +1,3 @@
-# Add or return bookmarked links for signed-in user
-
 from flask_restful import Resource, reqparse
 from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -11,7 +9,7 @@ from common.Link import Link
 import validators
 
 
-class AddLink(Resource):
+class LinksAdder(Resource):
     @jwt_required
     @swag_from('../../yml/links_add.yml')
     def post(self):

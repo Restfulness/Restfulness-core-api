@@ -1,12 +1,12 @@
 from flask_restful import Resource
-from flasgger import swag_from
 from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger import swag_from
 
 from common.DbHandler import DbHandler
 
 
-class DeleteLink(Resource):
+class LinksDeleter(Resource):
     @jwt_required
     @swag_from('../../yml/links_delete.yml')
     def delete(self, id):

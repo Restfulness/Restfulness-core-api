@@ -1,15 +1,15 @@
 from flask_restful import Resource
-from flasgger import swag_from
 from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger import swag_from
 
 from common.DbHandler import DbHandler
 
 
-class GetLink(Resource):
+class LinksGetter(Resource):
     @jwt_required
     @swag_from('../../yml/links_get.yml')
-    def get(self, id=-1):
+    def get(self, id=None):
         """ If client requests for /links will get whole links;
         else if requests for /links/[ID] will get specified link.
         NOTE: -1 is used as sentinel value
