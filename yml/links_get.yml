@@ -34,7 +34,12 @@ responses:
         categories:
           type: array
           items:
-            type: string
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
           description: "Link related categories"
         url:
           type: string
@@ -43,7 +48,11 @@ responses:
           type: int
           description: "Id of link"
       example:
-        categories: ["programming", "developing", "search"]
+        categories: [
+          {"id": 1, "name": "programming"},
+          {"id": 5, "name": "searching"},
+          {"id": 11, "name": "Q and A"}
+        ]
         url: https://stackoverflow.com
         id: 2
   404:

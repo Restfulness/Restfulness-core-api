@@ -12,7 +12,6 @@ class LinksGetter(Resource):
     def get(self, id=None):
         """ If client requests for /links will get whole links;
         else if requests for /links/[ID] will get specified link.
-        NOTE: -1 is used as sentinel value
         """
         current_user_username = get_jwt_identity()
         links_list = DbHandler.get_links(current_user_username, id)
