@@ -101,7 +101,11 @@ class DbHandler():
                 "id": link.id,
                 "url": link.url,
                 "categories": [
-                    category.name for category in link.categories
+                    {
+                        "id": category.id,
+                        "name": category.name
+                    }
+                    for category in link.categories
                 ]
             }
             for link in link_objects
