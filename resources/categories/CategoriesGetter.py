@@ -8,7 +8,7 @@ from common.DbHandler import DbHandler
 
 class CategoriesGetter(Resource):
     @jwt_required
-    #@swag_from('../../yml/categories_get.yml')
+    @swag_from('../../yml/categories_get.yml')
     def get(self, id=None):
         """ If client requests for /categories will get whole categories;
         else if requests for /categories/[ID] will get specified category.
