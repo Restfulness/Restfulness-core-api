@@ -9,6 +9,7 @@ from resources.user.Signup import Signup
 from resources.links.LinksDeleter import LinksDeleter
 from resources.links.LinksAdder import LinksAdder
 from resources.links.LinksGetter import LinksGetter
+from resources.categories.CategoriesGetter import CategoriesGetter
 
 
 from db import db
@@ -64,6 +65,12 @@ api.add_resource(
 api.add_resource(
     LinksAdder,
     CONFIG.get('routes', {}).get('links', {}).get('main')
+)
+api.add_resource(
+    CategoriesGetter,
+    CONFIG.get('routes', {}).get('categories', {}).get('main'),
+    CONFIG.get('routes', {}).get('categories', {}).get('get_id'),
+    endpoint='categories'
 )
 
 

@@ -8,10 +8,14 @@
 		"links":{
 			"main": "/links",
 			"get_id": "/links/<int:id>"
+		},
+		"categories": {
+			"main": "/categories",
+			"get_id": "/categories/<int:id>"
 		}
 	},
 	"database": {
-		"mysql": false,
+		"mysql": true,
 		"username": "test",
 		"password": "test",
 		"server": "db",

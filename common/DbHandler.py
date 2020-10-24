@@ -112,3 +112,39 @@ class DbHandler():
         ]
 
         return links_values
+
+    @staticmethod
+    def get_categories(username: str, category_id: int) -> list:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+        all_links_objects = Link.query.filter_by(owner_id=user_id[0]).all()
+
+        # We use 'set' data structure because we don't need any duplications
+        categories_objects = {
+            category
+            for link in all_links_objects
+            for category in link.categories
+        }
+
+        if category_id:
+            categories_values = [
+                {
+                    "id": category.id,
+                    "name": category.name,
+                }
+                for category in categories_objects
+                if category.id == category_id
+            ]
+        else:
+            categories_values = [
+                {
+                    "id": category.id,
+                    "name": category.name,
+                }
+                for category in categories_objects
+            ]
+
+        if categories_values:
+            return categories_values
+        else:
+            return 'ID_NOT_FOUND'
