@@ -117,14 +117,10 @@ class DbHandler():
     def get_categories(username: str, category_id: int) -> list:
         user_id = (User.query.
                    with_entities(User.id).filter_by(username=username).first())
-        all_links_objects = Link.query.filter_by(owner_id=user_id[0]).all()
 
-        # We use 'set' data structure because we don't need any duplications
-        categories_objects = {
-            category
-            for link in all_links_objects
-            for category in link.categories
-        }
+        categories_objects = db.session.query(Category).\
+            join(Category, Link.categories).\
+            filter(Link.owner_id == user_id[0]).all()
 
         if category_id:
             categories_values = [
