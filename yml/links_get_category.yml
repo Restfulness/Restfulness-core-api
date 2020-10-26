@@ -1,0 +1,67 @@
+Get bookmarks for owner of current token by special Category ID
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+tags:
+  - name: "Links"
+parameters:
+  - name: Authorization
+    in: header
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+  - name: "id"
+    in: "path"
+    description: "Category id to get"
+    required: true
+    type: "integer"
+example:
+  Authorization: "Bearer eyJ0eXAiOi...."
+  id: 1
+responses:
+  200:
+    description: "Return bookmarks"
+    schema:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+          description: "Link related categories"
+        url:
+          type: string
+          description: "Link url"
+        id:
+          type: int
+          description: "Id of link"
+      example:
+        categories: [
+          {"id": 1, "name": "programming"},
+          {"id": 5, "name": "searching"},
+          {"id": 11, "name": "Q and A"}
+        ]
+        url: https://stackoverflow.com
+        id: 2
+  404:
+    description: "Link ID not found"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Link not found!
+      example:
+        msg: Link not found!

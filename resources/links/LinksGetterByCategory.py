@@ -8,7 +8,7 @@ from common.DbHandler import DbHandler
 
 class LinksGetterByCategory(Resource):
     @jwt_required
-    #@swag_from('../../yml/links_get_category.yml')
+    @swag_from('../../yml/links_get_category.yml')
     def get(self, id):
         """ Return links by special Category ID """
         current_user_username = get_jwt_identity()
