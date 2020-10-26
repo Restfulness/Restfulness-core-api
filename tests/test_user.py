@@ -18,6 +18,8 @@ USER_LOGIN_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('login')
 LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
 CATEGORIES_MAIN_ROUTE = CONFIG.get(
     'routes', {}).get('categories', {}).get('main')
+LINKS_BY_CATEGORY_ROUTE = CONFIG.get(
+    'routes', {}).get('links', {}).get('by_category')
 
 TOKEN = ""
 NEW_CREATED_LINK_ID = ""
@@ -257,6 +259,32 @@ def test_get_category_by_id_rejected(client):
     }
     res = client.get(
         f'{CATEGORIES_MAIN_ROUTE}/{NEW_CREATED_CATEGORY_ID+1}',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_get_link_by_category_id_accepted(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/category/22"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_category_id_invalid_data_rejected(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/category/22"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID+1}',
         headers=headers
     )
     assert res.status_code == 404
