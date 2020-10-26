@@ -112,3 +112,63 @@ class DbHandler():
         ]
 
         return links_values
+
+    @staticmethod
+    def get_categories(username: str, category_id: int) -> list:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+
+        categories_objects = db.session.query(Category).\
+            join(Category, Link.categories).\
+            filter(Link.owner_id == user_id[0]).all()
+
+        if category_id:
+            categories_values = [
+                {
+                    "id": category.id,
+                    "name": category.name,
+                }
+                for category in categories_objects
+                if category.id == category_id
+            ]
+        else:
+            categories_values = [
+                {
+                    "id": category.id,
+                    "name": category.name,
+                }
+                for category in categories_objects
+            ]
+
+        if categories_values:
+            return categories_values
+        else:
+            return 'ID_NOT_FOUND'
+
+    @staticmethod
+    def get_links_by_category(username: str, category_id: int) -> list:
+        user_id = (User.query.
+                   with_entities(User.id).filter_by(username=username).first())
+
+        link_objects = db.session.query(Link).\
+            join(Category, Link.categories).\
+            filter(Link.owner_id == user_id[0]).\
+            filter(Category.id == category_id).\
+            all()
+
+        links_values = [
+            {
+                "id": link.id,
+                "url": link.url,
+                "categories": [
+                    {
+                        "id": category.id,
+                        "name": category.name
+                    }
+                    for category in link.categories
+                ]
+            }
+            for link in link_objects
+        ]
+
+        return links_values

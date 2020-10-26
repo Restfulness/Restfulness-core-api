@@ -16,9 +16,14 @@ HEADERS = {
 USER_SIGNUP_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('signup')
 USER_LOGIN_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('login')
 LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
+CATEGORIES_MAIN_ROUTE = CONFIG.get(
+    'routes', {}).get('categories', {}).get('main')
+LINKS_BY_CATEGORY_ROUTE = CONFIG.get(
+    'routes', {}).get('links', {}).get('by_category')
 
 TOKEN = ""
 NEW_CREATED_LINK_ID = ""
+NEW_CREATED_CATEGORY_ID = ""
 
 
 def generate_random_string(length):
@@ -216,6 +221,73 @@ def test_get_link_by_id_accepted(client):
         headers=headers
     )
     assert res.status_code == 200
+
+
+def test_get_categories_accepted(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/categories"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        CATEGORIES_MAIN_ROUTE,
+        headers=headers
+    )
+    global NEW_CREATED_CATEGORY_ID
+    NEW_CREATED_CATEGORY_ID = json.loads(res.get_data(as_text=True))[-1]['id']
+    assert res.status_code == 200
+
+
+def test_get_category_by_id_accepted(client):
+    """curl -i -H "Authorization: Bearer $x" -X GET localhost:5000/categories/6
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{CATEGORIES_MAIN_ROUTE}/{NEW_CREATED_CATEGORY_ID}',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_category_by_id_rejected(client):
+    """curl -i -H "Authorization: Bearer $x" -X GET localhost:5000/categories/6
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{CATEGORIES_MAIN_ROUTE}/{NEW_CREATED_CATEGORY_ID+1}',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_get_link_by_category_id_accepted(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/category/22"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_category_id_invalid_data_rejected(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/category/22"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID+1}',
+        headers=headers
+    )
+    assert res.status_code == 404
 
 
 def test_delete_link_by_id_accepted(client):

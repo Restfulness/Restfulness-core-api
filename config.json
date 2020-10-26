@@ -7,11 +7,17 @@
 		},
 		"links":{
 			"main": "/links",
-			"get_id": "/links/<int:id>"
+			"get_id": "/links/<int:id>",
+			"by_category": "/links/category",
+			"by_category_id": "/links/category/<int:id>"
+		},
+		"categories": {
+			"main": "/categories",
+			"get_id": "/categories/<int:id>"
 		}
 	},
 	"database": {
-		"mysql": false,
+		"mysql": true,
 		"username": "test",
 		"password": "test",
 		"server": "db",
