@@ -85,14 +85,13 @@ class DbHandler():
 
     @staticmethod
     def get_links(username: str, link_id: int) -> list:
-        user_id = (User.query.
-                   with_entities(User.id).filter_by(username=username).first())
+        user_id = DbHandler.get_user_id(username)
 
         if link_id is None:
-            link_objects = Link.query.filter_by(owner_id=user_id[0]).all()
+            link_objects = Link.query.filter_by(owner_id=user_id).all()
         else:
             link_objects = Link.query.filter_by(
-                owner_id=user_id[0],
+                owner_id=user_id,
                 id=link_id
             ).all()
 
@@ -115,12 +114,11 @@ class DbHandler():
 
     @staticmethod
     def get_categories(username: str, category_id: int) -> list:
-        user_id = (User.query.
-                   with_entities(User.id).filter_by(username=username).first())
+        user_id = DbHandler.get_user_id(username)
 
         categories_objects = db.session.query(Category).\
             join(Category, Link.categories).\
-            filter(Link.owner_id == user_id[0]).all()
+            filter(Link.owner_id == user_id).all()
 
         if category_id:
             categories_values = [
@@ -147,12 +145,11 @@ class DbHandler():
 
     @staticmethod
     def get_links_by_category(username: str, category_id: int) -> list:
-        user_id = (User.query.
-                   with_entities(User.id).filter_by(username=username).first())
+        user_id = DbHandler.get_user_id(username)
 
         link_objects = db.session.query(Link).\
             join(Category, Link.categories).\
-            filter(Link.owner_id == user_id[0]).\
+            filter(Link.owner_id == user_id).\
             filter(Category.id == category_id).\
             all()
 
