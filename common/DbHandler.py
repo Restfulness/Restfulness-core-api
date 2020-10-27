@@ -156,19 +156,25 @@ class DbHandler():
             filter(Category.id == category_id).\
             all()
 
-        links_values = [
-            {
-                "id": link.id,
-                "url": link.url,
-                "categories": [
+        requested_category_object = Category.query.filter_by(
+            id=category_id
+        ).first()
+
+        if requested_category_object is None:
+            return 'CATEGORY_NOT_FOUND'
+
+        links_values = {
+            "category": {
+                "id": requested_category_object.id,
+                "name": requested_category_object.name,
+                "links": [
                     {
-                        "id": category.id,
-                        "name": category.name
+                        "id": link.id,
+                        "url": link.url
                     }
-                    for category in link.categories
+                    for link in link_objects
                 ]
             }
-            for link in link_objects
-        ]
+        }
 
         return links_values
