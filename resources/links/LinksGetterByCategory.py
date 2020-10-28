@@ -13,13 +13,13 @@ class LinksGetterByCategory(Resource):
         """ Return links by special Category ID """
         current_user_username = get_jwt_identity()
         links_list = DbHandler.get_links_by_category(current_user_username, id)
-        if links_list:
+        if links_list == 'CATEGORY_NOT_FOUND':
             return make_response(
-                jsonify(links_list),
-                200
+                jsonify(msg="Category not found!"),
+                404
             )
         else:
             return make_response(
-                jsonify(msg="Link not found!"),
-                404
+                jsonify(links_list),
+                200
             )

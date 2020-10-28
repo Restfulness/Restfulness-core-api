@@ -27,41 +27,43 @@ example:
   id: 1
 responses:
   200:
-    description: "Return bookmarks"
+    description: "Return bookmarks related to special category"
     schema:
       type: object
       properties:
-        categories:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-          description: "Link related categories"
-        url:
-          type: string
-          description: "Link url"
-        id:
-          type: int
-          description: "Id of link"
+        category:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  url:
+                    type: string
       example:
-        categories: [
-          {"id": 1, "name": "programming"},
-          {"id": 5, "name": "searching"},
-          {"id": 11, "name": "Q and A"}
-        ]
-        url: https://stackoverflow.com
-        id: 2
+        category:
+          id: 2
+          name: programming
+          links: [
+            {id: 4, url: "https://stackoverflow.com"},
+            {id: 7, url: "http://geekforgeeks.com"},
+            {id: 11, url: "http://developer.com"}
+          ]
+        
   404:
-    description: "Link ID not found"
+    description: "Category ID not found"
     schema:
       type: object
       properties:
         msg:
           type: string
-          description: Link not found!
+          description: Category ID not found!
       example:
-        msg: Link not found!
+        msg: Category ID not found!
