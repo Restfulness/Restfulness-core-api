@@ -8,7 +8,7 @@ from common.DbHandler import DbHandler
 
 class LinksGetterBySearch(Resource):
     @jwt_required
-    #@swag_from('../../yml/links_get_category.yml')
+    @swag_from('../../yml/links_get_search.yml')
     def get(self, pattern):
         """ Return links that contains special key word """
         current_user_username = get_jwt_identity()
