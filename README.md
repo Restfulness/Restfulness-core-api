@@ -4,6 +4,8 @@ Another boilerplate for flask-restful web service (Including flask-sqlalchemy, f
 
 This project is going to be something like [Pocket](https://getpocket.com/) to save your favorite links.
 
+Now you can save your favourite links, add category to them, return them by category or by looking
+for some special keyword in their URL, ...
 
 ### Production Environment (Using Docker)
 
