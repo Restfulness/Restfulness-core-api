@@ -11,6 +11,7 @@ from resources.links.LinksAdder import LinksAdder
 from resources.links.LinksGetter import LinksGetter
 from resources.categories.CategoriesGetter import CategoriesGetter
 from resources.links.LinksGetterByCategory import LinksGetterByCategory
+from resources.links.LinksGetterBySearch import LinksGetterBySearch
 
 
 from db import db
@@ -76,6 +77,10 @@ api.add_resource(
 api.add_resource(
     LinksGetterByCategory,
     CONFIG.get('routes', {}).get('links', {}).get('by_category_id'),
+)
+api.add_resource(
+    LinksGetterBySearch,
+    CONFIG.get('routes', {}).get('links', {}).get('by_pattern_string')
 )
 
 

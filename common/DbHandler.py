@@ -175,3 +175,29 @@ class DbHandler():
         }
 
         return links_values
+
+    @staticmethod
+    def get_links_by_pattern(username: str, pattern: str) -> list:
+        user_id = DbHandler.get_user_id(username)
+        search_pattern = f'%{pattern}%'
+
+        link_objects = Link.query.filter(Link.owner_id == user_id).\
+            filter(Link.url.like(search_pattern)).all()
+
+        if not link_objects:
+            return 'PATTERN_NOT_FOUND'
+
+        links_values = {
+            "search": {
+                "pattern": pattern,
+                "links": [
+                    {
+                        "id": link.id,
+                        "url": link.url
+                    }
+                    for link in link_objects
+                ]
+            }
+        }
+
+        return links_values

@@ -20,6 +20,8 @@ CATEGORIES_MAIN_ROUTE = CONFIG.get(
     'routes', {}).get('categories', {}).get('main')
 LINKS_BY_CATEGORY_ROUTE = CONFIG.get(
     'routes', {}).get('links', {}).get('by_category')
+LINKS_BY_SEARCH_ROUTE = CONFIG.get(
+    'routes', {}).get('links', {}).get('by_pattern')
 
 TOKEN = ""
 NEW_CREATED_LINK_ID = ""
@@ -275,6 +277,32 @@ def test_get_link_by_category_id_accepted(client):
         headers=headers
     )
     assert res.status_code == 200
+
+
+def test_get_links_by_search_valid_data_accepted(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/search/"test" """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_links_by_search_invalid_data_rejected(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/search/"test" """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/NOT_vAlId_DaTa',
+        headers=headers
+    )
+    assert res.status_code == 404
 
 
 def test_get_link_by_category_id_invalid_data_rejected(client):

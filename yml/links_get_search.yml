@@ -1,0 +1,66 @@
+Get bookmarks for owner of current token that contain special key word
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+tags:
+  - name: "Links"
+parameters:
+  - name: Authorization
+    in: header
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+  - name: "word"
+    in: "path"
+    description: "Word to contain"
+    required: true
+    type: string
+example:
+  Authorization: "Bearer eyJ0eXAiOi...."
+  id: 1
+responses:
+  200:
+    description: "Return bookmarks that contain special key word in their URL"
+    schema:
+      type: object
+      properties:
+        search:
+          type: object
+          properties:
+            pattern:
+              type: string
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  url:
+                    type: string
+      example:
+        search:
+          pattern: vim
+          links: [
+            {id: 4, url: "https://this-has-vim.com"},
+            {id: 7, url: "http://vim.org"},
+            {id: 11, url: "https://vim-love-vim.com"}
+          ]
+        
+  404:
+    description: "Pattern not found"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Pattern not found!
+      example:
+        msg: Pattern not found!
