@@ -6,6 +6,20 @@ import json
 import random
 import string
 
+
+def generate_random_string(length: int) -> str:
+    """
+    For generating random username
+    """
+    result_str = ''.join(
+        random.choices(string.ascii_lowercase, k=length)
+    )
+    return result_str
+
+
+USERNAME = f'test_{generate_random_string(8)}'
+PASSWORD = 'test'
+
 # Load config file
 with open('config.json', mode='r') as config_file:
     CONFIG = json.load(config_file)
@@ -26,20 +40,6 @@ LINKS_BY_SEARCH_ROUTE = CONFIG.get(
 TOKEN = ""
 NEW_CREATED_LINK_ID = ""
 NEW_CREATED_CATEGORY_ID = ""
-
-
-def generate_random_string(length):
-    """
-    For generating random username
-    """
-    result_str = ''.join(
-        random.choice(string.ascii_lowercase) for i in range(length)
-    )
-    return result_str
-
-
-USERNAME = f'test_{generate_random_string(8)}'
-PASSWORD = 'test'
 
 
 def test_create_random_user_accepted(app, client):
