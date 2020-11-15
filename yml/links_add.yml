@@ -25,21 +25,17 @@ parameters:
     schema:
       required:
         - url
-        - categories
       properties:
         url:
           type: string
           description: "Site Link"
+          example: "https://stackoverflow.com"
         categories:
           type: array
           items:
             type: string
           description: "Categories which this site belongs to"
-      example:
-        - categories: ["programming", "developing", "search"]
-          url: "https://stackoverflow.com"
-        - categories: []
-          url: "https://google.com"
+          example: ["programming", "developing", "search"]
         
 responses:
   200:
