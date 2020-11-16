@@ -6,6 +6,8 @@ import json
 
 from resources.user.Login import Login
 from resources.user.Signup import Signup
+from resources.user.password.ForgetPassword import ForgetPassword
+
 from resources.links.LinksDeleter import LinksDeleter
 from resources.links.LinksAdder import LinksAdder
 from resources.links.LinksGetter import LinksGetter
@@ -81,6 +83,10 @@ api.add_resource(
 api.add_resource(
     LinksGetterBySearch,
     CONFIG.get('routes', {}).get('links', {}).get('by_pattern_string')
+)
+api.add_resource(
+    ForgetPassword,
+    CONFIG.get('routes', {}).get('user', {}).get('forget_password')
 )
 
 

@@ -8,6 +8,7 @@ from common.DbHandler import DbHandler
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('username', type=str, required=True)
 parser.add_argument('password', type=str, required=True)
+parser.add_argument('email', type=str, required=True)
 
 
 class Signup(Resource):
@@ -17,8 +18,9 @@ class Signup(Resource):
 
         username = args["username"]
         password = args["password"]
+        email = args["email"]
 
-        validate_sign_up = DbHandler.add_new_user(username, password)
+        validate_sign_up = DbHandler.add_new_user(username, password, email)
 
         return_message = ""
         if validate_sign_up == "OK":

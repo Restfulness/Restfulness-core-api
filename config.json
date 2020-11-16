@@ -3,7 +3,8 @@
 	"routes": {
 		"user": {
 			"login": "/user/login",
-			"signup": "/user/signup"
+			"signup": "/user/signup",
+			"forget_password": "/user/password/forget"
 		},
 		"links":{
 			"main": "/links",
