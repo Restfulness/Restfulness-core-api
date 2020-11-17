@@ -19,9 +19,7 @@ class ResetPasswordCore:
         ResetPasswordCore.__send_8_digit_code_to_users_email(
             username, random_code)
 
-        return(
-            ResetPasswordCore.__generate_hash_string(id, random_code)
-        )
+        return(ResetPasswordCore.__generate_hash_string(id, random_code))
 
     @staticmethod
     def __generate_hash_string(id: int, random_code: str) -> str:
@@ -29,10 +27,13 @@ class ResetPasswordCore:
         random created 8 digit code) which expires in 300 seconds."""
         hash = Serializer('test', expires_in=300)
         return(
-            hash.dumps({
-                'id': id,
-                'valid_code': random_code
-            })
+            str(
+                hash.dumps({
+                    'id': id,
+                    'valid_code': random_code
+                }),
+                'utf-8'
+            )
         )
 
     @staticmethod
