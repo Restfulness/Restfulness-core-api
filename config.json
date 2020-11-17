@@ -4,7 +4,8 @@
 		"user": {
 			"login": "/user/login",
 			"signup": "/user/signup",
-			"forget_password": "/user/password/forget"
+			"forget_password": "/user/password/forget",
+			"verify_code": "/user/password/verify"
 		},
 		"links":{
 			"main": "/links",
