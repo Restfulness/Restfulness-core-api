@@ -15,3 +15,5 @@ class VerifyCode(Resource):
         args = parser.parse_args()
         hashed_data = args['hashed_data']
         user_input = args['user_input']
+
+        ResetPasswordCore.get_password_reset_token(hashed_data, user_input)
