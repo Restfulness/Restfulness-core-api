@@ -16,4 +16,25 @@ class VerifyCode(Resource):
         hashed_data = args['hashed_data']
         user_input = args['user_input']
 
-        ResetPasswordCore.get_password_reset_token(hashed_data, user_input)
+        reset_token = ResetPasswordCore.get_password_reset_token(
+            hashed_data, user_input)
+
+        return_message = ''
+        if reset_token == 'EXPIRED':
+            return_message = make_response(
+                jsonify({'msg': 'Token expired!'}), 401
+            )
+        elif reset_token == 'INVALID_TOKEN':
+            return_message = make_response(
+                jsonify({'msg': 'Token invalid!'}), 401
+            )
+        elif reset_token == 'INVALID_CODE':
+            return_message = make_response(
+                jsonify({'msg': 'User inputed code is incorrect'}), 400
+            )
+        else:
+            return_message = make_response(
+                jsonify({'reset_password_token': reset_token}), 200
+            )
+
+        return(return_message)

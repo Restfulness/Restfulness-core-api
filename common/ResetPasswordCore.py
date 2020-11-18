@@ -25,25 +25,49 @@ class ResetPasswordCore:
     def get_password_reset_token(hashed_data: str, user_input: str) -> str:
         """ Return token for reseting password if user inputed correct
         8 digit code."""
-        user_id = ResetPasswordCore.__verify_user_input_with_hashed_data(
-            hashed_data, user_input)
-        print(user_id)
-        # TODO: This function should be completed
+        try:
+            user_id = ResetPasswordCore.__verify_user_input_with_hashed_data(
+                hashed_data, user_input)
+        except SignatureExpired:
+            return('EXPIRED')
+        except BadSignature:
+            return('INVALID_TOKEN')
+
+        if user_id == -1:
+            return('INVALID_CODE')
+        else:
+            return(ResetPasswordCore.__generate_reset_password_token(user_id))
 
     @staticmethod
     def __verify_user_input_with_hashed_data(hashed_data: str,
                                              user_input: str) -> int:
         """ Verify if user's inputed 8 digit code is correct, if so,
         return users id."""
-        s = Serializer('test')
+        hash = Serializer('test')
         try:
-            data = s.loads(hashed_data)
+            data = hash.loads(hashed_data)
         except SignatureExpired:
-            return 'EXPIRED'
+            raise
         except BadSignature:
-            return 'INVALID'
+            raise
 
-        return(data['id'])
+        if user_input == data['valid_code']:
+            return(data['id'])
+        else:
+            return(-1)
+
+    @staticmethod
+    def __generate_reset_password_token(id: int) -> str:
+        """ Generate the main token that reset user's password."""
+        hash = Serializer('test', expires_in=300)
+        return(
+            str(
+                hash.dumps({
+                    'id': id
+                }),
+                'utf-8'
+            )
+        )
 
     @staticmethod
     def __generate_hash_string(id: int, random_code: str) -> str:
