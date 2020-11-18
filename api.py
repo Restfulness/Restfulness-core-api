@@ -8,6 +8,7 @@ from resources.user.Login import Login
 from resources.user.Signup import Signup
 from resources.user.password.ForgetPassword import ForgetPassword
 from resources.user.password.VerifyCode import VerifyCode
+from resources.user.password.ResetPassword import ResetPassword
 
 from resources.links.LinksDeleter import LinksDeleter
 from resources.links.LinksAdder import LinksAdder
@@ -92,6 +93,10 @@ api.add_resource(
 api.add_resource(
     VerifyCode,
     CONFIG.get('routes', {}).get('user', {}).get('verify_code')
+)
+api.add_resource(
+    ResetPassword,
+    CONFIG.get('routes', {}).get('user', {}).get('reset_password')
 )
 
 

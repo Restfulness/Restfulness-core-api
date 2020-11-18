@@ -5,7 +5,8 @@
 			"login": "/user/login",
 			"signup": "/user/signup",
 			"forget_password": "/user/password/forget",
-			"verify_code": "/user/password/verify"
+			"verify_code": "/user/password/verify",
+			"reset_password": "/user/password/reset"
 		},
 		"links":{
 			"main": "/links",

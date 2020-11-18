@@ -11,6 +11,8 @@ class ResetPasswordCore:
     """Core Functions of reseting user's password."""
     @staticmethod
     def get_8_digit_auth_code(username: str) -> str:
+        """ Step 1: Start process of resetting password. Return hash format of
+        user's ID + random generated 8 digit code."""
         id = DbHandler.get_user_id(username)
         if id is None:
             return "USER_NOT_FOUND"
@@ -23,7 +25,7 @@ class ResetPasswordCore:
 
     @staticmethod
     def get_password_reset_token(hashed_data: str, user_input: str) -> str:
-        """ Return token for reseting password if user inputed correct
+        """ Step 2: Return token for reseting password if user inputed correct
         8 digit code."""
         try:
             user_id = ResetPasswordCore.__verify_user_input_with_hashed_data(
@@ -37,6 +39,12 @@ class ResetPasswordCore:
             return('INVALID_CODE')
         else:
             return(ResetPasswordCore.__generate_reset_password_token(user_id))
+
+    @staticmethod
+    def reset_password(reset_token: str, new_password: str) -> str:
+        """ Step 3: Change user's password if the token for changing
+        password is valid"""
+        pass
 
     @staticmethod
     def __verify_user_input_with_hashed_data(hashed_data: str,
