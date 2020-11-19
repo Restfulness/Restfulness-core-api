@@ -1,5 +1,6 @@
 {
 	"host": "0.0.0.0",
+	"serializer_secret_key": "VERY_SECRET",
 	"routes": {
 		"user": {
 			"login": "/user/login",

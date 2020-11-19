@@ -5,6 +5,13 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 
 import random
 import string
+import json
+
+# Load config file to read Serializer secret key
+with open('config.json', mode='r') as config_file:
+    CONFIG = json.load(config_file)
+
+SECRET_KEY = CONFIG.get('serializer_secret_key')
 
 
 class ResetPasswordCore:
@@ -61,7 +68,7 @@ class ResetPasswordCore:
     @staticmethod
     def __validate_reset_password_token(token: str) -> int:
         """ Return user's ID if reset password token is correct. """
-        hash = Serializer('test')
+        hash = Serializer(SECRET_KEY)
         try:
             data = hash.loads(token)
         except SignatureExpired:
@@ -76,7 +83,7 @@ class ResetPasswordCore:
                                              user_input: str) -> int:
         """ Verify if user's inputed 8 digit code is correct, if so,
         return users id."""
-        hash = Serializer('test')
+        hash = Serializer(SECRET_KEY)
         try:
             data = hash.loads(hashed_data)
         except SignatureExpired:
@@ -92,7 +99,7 @@ class ResetPasswordCore:
     @staticmethod
     def __generate_reset_password_token(id: int) -> str:
         """ Generate the main token that reset user's password."""
-        hash = Serializer('test', expires_in=300)
+        hash = Serializer(SECRET_KEY, expires_in=300)
         return(
             str(
                 hash.dumps({
@@ -106,7 +113,7 @@ class ResetPasswordCore:
     def __generate_hash_string(id: int, random_code: str) -> str:
         """ Create a hash that contains (user's ID and valid
         random created 8 digit code) which expires in 300 seconds."""
-        hash = Serializer('test', expires_in=300)
+        hash = Serializer(SECRET_KEY, expires_in=300)
         return(
             str(
                 hash.dumps({
