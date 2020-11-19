@@ -2,10 +2,13 @@ from common.DbHandler import DbHandler
 
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 import random
 import string
 import json
+import smtplib
 
 # Load config file to read Serializer secret key
 with open('config.json', mode='r') as config_file:
@@ -127,8 +130,28 @@ class ResetPasswordCore:
     @staticmethod
     def __send_8_digit_code_to_users_email(username: str, random_code: str):
         """ Send random generated password to user's email."""
-        # TODO: Implement sending email part
-        pass
+        host = CONFIG.get('smtp', {}).get('host')
+        port = CONFIG.get('smtp', {}).get('port')
+        sender_email = CONFIG.get('smtp', {}).get('email')
+        password = CONFIG.get('smtp', {}).get('password')
+
+        # For passing CI tests
+        if host == 'your_host_address_here':
+            return
+
+        smtp_server = smtplib.SMTP(host=host, port=port)
+        smtp_server.starttls()
+        smtp_server.login(sender_email, password)
+
+        message = f'Your password is {random_code}'
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = DbHandler.get_user_email(username)
+        msg['Subject'] = 'Restfulness Forget Password Code'
+        msg.attach(MIMEText(message, 'plain'))
+
+        smtp_server.send_message(msg)
+        smtp_server.quit()
 
     @staticmethod
     def __generate_8_digit_code() -> str:

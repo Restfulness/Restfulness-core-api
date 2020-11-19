@@ -28,5 +28,11 @@
 		"password": "test",
 		"server": "db",
 		"db": "restfulness"
+	},
+	"smtp": {
+		"host": "your_host_address_here",
+		"port": 587,
+		"email": "your_email@some_where.com",
+		"password": "your_password"
 	}
 }
