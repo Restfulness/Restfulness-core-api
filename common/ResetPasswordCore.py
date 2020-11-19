@@ -44,7 +44,32 @@ class ResetPasswordCore:
     def reset_password(reset_token: str, new_password: str) -> str:
         """ Step 3: Change user's password if the token for changing
         password is valid"""
-        pass
+        try:
+            user_id = ResetPasswordCore.__validate_reset_password_token(
+                reset_token)
+        except SignatureExpired:
+            return('EXPIRED')
+        except BadSignature:
+            return('INVALID_TOKEN')
+
+        status = DbHandler.reset_user_forgotten_password(user_id, new_password)
+        if status == 'OK':
+            return('OK')
+        else:
+            return('FAILED')
+
+    @staticmethod
+    def __validate_reset_password_token(token: str) -> int:
+        """ Return user's ID if reset password token is correct. """
+        hash = Serializer('test')
+        try:
+            data = hash.loads(token)
+        except SignatureExpired:
+            raise
+        except BadSignature:
+            raise
+
+        return(data['id'])
 
     @staticmethod
     def __verify_user_input_with_hashed_data(hashed_data: str,

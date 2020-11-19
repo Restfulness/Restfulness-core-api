@@ -16,18 +16,22 @@ class ResetPassword(Resource):
         token = args['reset_password_token']
         new_password = args['new_password']
 
-        reset_token = ResetPasswordCore.reset_password(token, new_password)
+        status = ResetPasswordCore.reset_password(token, new_password)
 
         return_message = ''
-        if reset_token == 'EXPIRED':
+        if status == 'EXPIRED':
             return_message = make_response(
                 jsonify({'msg': 'Token expired!'}), 401
             )
-        elif reset_token == 'INVALID_TOKEN':
+        elif status == 'INVALID_TOKEN':
             return_message = make_response(
                 jsonify({'msg': 'Token invalid!'}), 401
             )
-        else:
+        elif status == 'FAILED':
+            return_message = make_response(
+                jsonify({'msg': 'Failed due to server error'}), 500
+            )
+        elif status == 'OK':
             return_message = make_response(
                 jsonify({'msg': 'Password reseted successfully.'}), 200
             )

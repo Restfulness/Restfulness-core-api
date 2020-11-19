@@ -206,3 +206,10 @@ class DbHandler():
         }
 
         return links_values
+
+    @staticmethod
+    def reset_user_forgotten_password(user_id: int, new_password: str) -> str:
+        user = User.query.filter_by(id=user_id).first()
+        user.update_password(new_password)
+        db.session.commit()
+        return 'OK'
