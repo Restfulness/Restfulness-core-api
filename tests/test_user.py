@@ -50,7 +50,8 @@ def test_create_random_user_accepted(app, client):
 
     data = {
         "username": USERNAME,
-        "password": PASSWORD
+        "password": PASSWORD,
+        "email": f'{USERNAME}@gmail.com'
     }
     res = client.post(
         USER_SIGNUP_ROUTE,
@@ -64,7 +65,8 @@ def test_create_random_user_accepted(app, client):
 def test_create_random_user_failed(app, client):
     data = {
         "username": USERNAME,
-        "password": PASSWORD
+        "password": PASSWORD,
+        "email": f'{USERNAME}@gmail.com'
     }
     res = client.post(
         USER_SIGNUP_ROUTE,
