@@ -24,7 +24,7 @@ class ResetPasswordCore:
         """ Step 1: Start process of resetting password. Return hash format of
         user's ID + random generated 8 digit code."""
         id = DbHandler.get_user_id(username)
-        if id is None:
+        if id == -1:
             return "USER_NOT_FOUND"
 
         random_code = ResetPasswordCore.__generate_8_digit_code()

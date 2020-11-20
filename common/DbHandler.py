@@ -16,7 +16,10 @@ class DbHandler():
     def get_user_id(username: str) -> int:
         user_id = (User.query.
                    with_entities(User.id).filter_by(username=username).first())
-        return user_id[0]
+        if user_id:
+            return(user_id[0])
+        else:
+            return(-1)
 
     @staticmethod
     def get_user_email(username: str) -> str:
