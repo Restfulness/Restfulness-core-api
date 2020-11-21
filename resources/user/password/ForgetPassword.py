@@ -1,7 +1,7 @@
 from flask_restful import reqparse, Resource
 from flask import jsonify, make_response
 
-# from flasgger import swag_from
+from flasgger import swag_from
 
 from common.ResetPasswordCore import ResetPasswordCore
 
@@ -10,6 +10,7 @@ parser.add_argument('username', type=str, required=True)
 
 
 class ForgetPassword(Resource):
+    @swag_from('../../../yml/forget_password/forget_password.yml')
     def post(self):
         args = parser.parse_args()
         username = args['username']

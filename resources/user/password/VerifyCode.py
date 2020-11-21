@@ -1,7 +1,7 @@
 from flask_restful import reqparse, Resource
 from flask import jsonify, make_response
 
-# from flasgger import swag_from
+from flasgger import swag_from
 
 from common.ResetPasswordCore import ResetPasswordCore
 
@@ -11,6 +11,7 @@ parser.add_argument('user_input', type=str, required=True)
 
 
 class VerifyCode(Resource):
+    @swag_from('../../../yml/forget_password/verify_code.yml')
     def post(self):
         args = parser.parse_args()
         hashed_data = args['hashed_data']
