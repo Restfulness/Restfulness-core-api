@@ -10,7 +10,7 @@ parameters:
       required:
         - username
         - password
-      id: User
+        - email
       properties:
         username:
           type: string
@@ -18,9 +18,13 @@ parameters:
         password:
           type: string
           description: Your password
+        email:
+          type: string
+          description: Your Email
       example:
         username: "test"
         password: "test"
+        email: "test@somewhere.com"
 responses:
   "200":
     description: "Sign Up Successfull"
