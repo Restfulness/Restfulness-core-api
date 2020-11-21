@@ -22,6 +22,16 @@ parameters:
     description: "Link id to get"
     required: false
     type: "integer"
+  - name: "page"
+    in: "query"
+    description: "Which page do want to get"
+    required: false
+    type: "integer"
+  - name: "page_size"
+    in: "query"
+    description: "the number of links in each page"
+    required: false
+    type: "integer"
 example:
   Authorization: "Bearer eyJ0eXAiOi...."
   id: 1

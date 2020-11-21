@@ -7,7 +7,7 @@ from common.Category import Category
 from db import db
 
 
-class DbHandler():
+class DbHandler:
     @staticmethod
     def get_user_object(username: str) -> User:
         return User.query.filter_by(username=username).first()
@@ -84,11 +84,11 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def get_links(username: str, link_id: int) -> list:
+    def get_links(username: str, link_id: int, page: int = 0, page_size: int = 5) -> list:
         user_id = DbHandler.get_user_id(username)
-
         if link_id is None:
-            link_objects = Link.query.filter_by(owner_id=user_id).all()
+            link_objects = Link.query.filter_by(owner_id=user_id).order_by(Link.id.desc())\
+                .limit(page_size).offset(page_size*page)
         else:
             link_objects = Link.query.filter_by(
                 owner_id=user_id,
