@@ -86,6 +86,15 @@ To see available APIs, go to http://localhost:5000/apidocs
 - [Restfulness Flutter App](https://github.com/Restfulness/Restfulness-flutter-app)
 
 
+### Notes
+- **How does reset password mechanism work?**
+  1. Client sends a POST request to `/forget` endpoint, containing `user's username`.
+  2. Server sends an 8 digit random created code to user's Email and returns a hash string which contains `User's ID, Valid 8 digit code and expire date`. (We use [ItsDangerous](https://itsdangerous.palletsprojects.com) for creating that hash, so it's safe.)
+  3. Client sends a POST request to `/verify` endpoint, containing `user's entered 8 digit code` and `hash that was obtained from previous call`.
+  4. Server returns a token for resetting password, **If** user entered the correct 8 digit code.
+  5. At last, Client sends a POST request to `/reset` endpoint, containing `Reset password token that is obtained from previous call` and `user's new password`.
+  6. For more information, read [this](https://dev.to/theanam/otp-verification-without-any-database-4ja5). (To make long story short, we do this to pick up unnecessary pressure from our server.)
+
 For more information read this:
 
 * https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
