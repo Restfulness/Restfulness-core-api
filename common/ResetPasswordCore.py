@@ -1,9 +1,11 @@
+from typing import Text
 from common.DbHandler import DbHandler
 
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from jinja2 import Environment, FileSystemLoader
 
 import random
 import string
@@ -28,8 +30,13 @@ class ResetPasswordCore:
             return "USER_NOT_FOUND"
 
         random_code = ResetPasswordCore.__generate_8_digit_code()
-        ResetPasswordCore.__send_8_digit_code_to_users_email(
-            username, random_code)
+        forget_password_rendered_page = ResetPasswordCore.\
+            __render_forget_password_page(random_code)
+
+        ResetPasswordCore.__send_email_to_user(
+            username,
+            'Restfulness Forget Password Code',
+            forget_password_rendered_page)
 
         return(ResetPasswordCore.__generate_hash_string(id, random_code))
 
@@ -128,8 +135,9 @@ class ResetPasswordCore:
         )
 
     @staticmethod
-    def __send_8_digit_code_to_users_email(username: str, random_code: str):
-        """ Send random generated password to user's email."""
+    def __send_email_to_user(username: str, subject: str, msg_body: Text):
+        """ Send Email to username's Email. msg_body is Jinja2
+        rendered template."""
         host = CONFIG.get('smtp', {}).get('host')
         port = CONFIG.get('smtp', {}).get('port')
         sender_email = CONFIG.get('smtp', {}).get('email')
@@ -143,12 +151,12 @@ class ResetPasswordCore:
         smtp_server.starttls()
         smtp_server.login(sender_email, password)
 
-        message = f'Your password is {random_code}'
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = DbHandler.get_user_email(username)
-        msg['Subject'] = 'Restfulness Forget Password Code'
-        msg.attach(MIMEText(message, 'plain'))
+        msg['Subject'] = subject
+        body_rendered = msg_body
+        msg.attach(MIMEText(body_rendered, 'html'))
 
         smtp_server.send_message(msg)
         smtp_server.quit()
@@ -160,3 +168,10 @@ class ResetPasswordCore:
             random.choice(string.digits) for i in range(8)
         )
         return result_str
+
+    @staticmethod
+    def __render_forget_password_page(random_code: str) -> Text:
+        """ Using Jinja2 to render forget password email page. """
+        env = Environment(loader=FileSystemLoader('templates/'))
+        template = env.get_template('forget_password.html')
+        return(template.render(code=random_code))
