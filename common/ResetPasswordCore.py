@@ -153,7 +153,7 @@ class ResetPasswordCore:
 
         msg = MIMEMultipart()
         msg['From'] = sender_email
-        msg['To'] = DbHandler.get_user_email(username)
+        msg['To'] = username
         msg['Subject'] = subject
         body_rendered = msg_body
         msg.attach(MIMEText(body_rendered, 'html'))

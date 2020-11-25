@@ -22,11 +22,6 @@ class DbHandler():
             return(-1)
 
     @staticmethod
-    def get_user_email(username: str) -> str:
-        return User.query.with_entities(User.email).\
-            filter_by(username=username).first()[0]
-
-    @staticmethod
     def validate_login(username: str, password: str) -> User:
         user = (User.query.filter_by(username=username).first())
 
@@ -37,13 +32,13 @@ class DbHandler():
             return None
 
     @staticmethod
-    def add_new_user(username: str, password: str, email: str) -> str:
+    def add_new_user(username: str, password: str) -> str:
         # Check if user exists
         user = User.query.filter_by(username=username).first()
         if user:
             return "USER_EXISTS"
 
-        user = User(username=username, password_hash=password, email=email)
+        user = User(username=username, password_hash=password)
         db.session.add(user)
         db.session.commit()
 
