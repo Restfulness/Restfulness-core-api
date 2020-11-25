@@ -45,7 +45,7 @@ def get_valid_code_from_hashed_data(hashed_data: str) -> str:
     return(data['valid_code'])
 
 
-USERNAME = f'test_{generate_random_string(8)}'
+USERNAME = f'test_{generate_random_string(8)}@gmail.com'
 CURRENT_PASSWORD = 'test'
 NEW_PASSWORD = 'test_test'
 HASHED_DATA_FROM_SERVER = ''
