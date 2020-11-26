@@ -10,21 +10,16 @@ parameters:
       required:
         - username
         - password
-        - email
       properties:
         username:
           type: string
-          description: "Your username"
+          description: "A valid Email address"
         password:
           type: string
           description: Your password
-        email:
-          type: string
-          description: Your Email
       example:
-        username: "test"
+        username: "test@somewhere.com"
         password: "test"
-        email: "test@somewhere.com"
 responses:
   "200":
     description: "Sign Up Successfull"
@@ -42,6 +37,17 @@ responses:
       example:
         username: test
         msg: User created
+  "400":
+    description: "Username should be an valid Email."
+    schema:
+      type: object
+      properties:
+        msg:
+          type: "string"
+          format: "string"
+          description: Username should be an valid Email.
+      example:
+        msg: "Username should be an valid Email."
   "403":
     description: "Sign up failed"
     schema:
