@@ -3,7 +3,10 @@
 	"routes": {
 		"user": {
 			"login": "/user/login",
-			"signup": "/user/signup"
+			"signup": "/user/signup",
+			"forget_password": "/user/password/forget",
+			"verify_code": "/user/password/verify",
+			"reset_password": "/user/password/reset"
 		},
 		"links":{
 			"main": "/links",
@@ -24,5 +27,17 @@
 		"password": "test",
 		"server": "db",
 		"db": "restfulness"
+	},
+	"smtp": {
+		"host": "your_host_address_here",
+		"port": 587,
+		"email": "your_email@some_where.com",
+		"password": "your_password"
+	},
+	"forget_password": {
+		"serializer_secret_key": "VERY_SECRET",
+		"validation_token_expire_seconds": 300,
+		"reset_password_token_expire_seconds": 300,
+		"reset_password_code_length": 8
 	}
 }

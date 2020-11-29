@@ -16,7 +16,10 @@ class DbHandler():
     def get_user_id(username: str) -> int:
         user_id = (User.query.
                    with_entities(User.id).filter_by(username=username).first())
-        return user_id[0]
+        if user_id:
+            return(user_id[0])
+        else:
+            return(-1)
 
     @staticmethod
     def validate_login(username: str, password: str) -> User:
@@ -201,3 +204,10 @@ class DbHandler():
         }
 
         return links_values
+
+    @staticmethod
+    def reset_user_forgotten_password(user_id: int, new_password: str) -> str:
+        user = User.query.filter_by(id=user_id).first()
+        user.update_password(new_password)
+        db.session.commit()
+        return 'OK'

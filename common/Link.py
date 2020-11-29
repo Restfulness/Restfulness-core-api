@@ -1,5 +1,6 @@
 from db import db
 from common.Relationships import links_to_categories
+from sqlalchemy.sql import func
 
 
 class Link(db.Model):
@@ -19,3 +20,5 @@ class Link(db.Model):
         ),
         cascade='all, delete'
     )
+    time_created = db.Column(db.DateTime(timezone=True),
+                             server_default=func.now())

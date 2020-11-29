@@ -38,7 +38,7 @@ def generate_random_string(length):
     return result_str
 
 
-USERNAME = f'test_{generate_random_string(8)}'
+USERNAME = f'test_{generate_random_string(8)}@gmail.com'
 PASSWORD = 'test'
 
 
@@ -49,7 +49,7 @@ def test_create_random_user_accepted(app, client):
     """
 
     data = {
-        "username": USERNAME,
+        "username":  USERNAME,
         "password": PASSWORD
     }
     res = client.post(
@@ -61,7 +61,7 @@ def test_create_random_user_accepted(app, client):
     assert res.status_code == 200
 
 
-def test_create_random_user_failed(app, client):
+def test_create_random_user_exists_failed(app, client):
     data = {
         "username": USERNAME,
         "password": PASSWORD
@@ -73,6 +73,20 @@ def test_create_random_user_failed(app, client):
     )
 
     assert res.status_code == 403
+
+
+def test_create_random_user_invalid_email_failed(app, client):
+    data = {
+        "username": "INVALID_EMAIL",
+        "password": PASSWORD
+    }
+    res = client.post(
+        USER_SIGNUP_ROUTE,
+        data=json.dumps(data),
+        headers=HEADERS
+    )
+
+    assert res.status_code == 400
 
 
 def test_login_accepted(app, client):

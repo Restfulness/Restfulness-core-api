@@ -1,0 +1,65 @@
+Step 2) Return password resetting token if user entered correct 8 digit code
+---
+openapi: 3.0.0
+consumes:
+  "application/json"
+tags:
+  - name: "Forget Password"
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - hashed_data
+        - user_input
+      properties:
+        hashed_data:
+          type: string
+          description: "Hashed data which is obtained from previous call to /forget_password"
+          example: "eyJhb..."
+        user_input:
+          type: string
+          description: "User inputed 8 digit code"
+          example: "86119547"
+responses:
+  200:
+    description: "Return token for resetting password"
+    schema:
+      type: object
+      properties:
+        reset_password_token:
+          type: string
+          description: "Token for resetting user's password"
+      example:
+        hashed_data: "eyJhb..."
+  400:
+    description: "User inputed code is incorrect"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "User inputed code is incorrect"
+      example:
+        msg: "User inputed code is incorrect"
+  401:
+    description: "Token expired!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Token expired!"
+      example:
+        msg: "Token expired!"
+  401:
+    description: "Token invalid!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Token invalid!"
+      example:
+        msg: "Token invalid!"
