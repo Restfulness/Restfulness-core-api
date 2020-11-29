@@ -15,7 +15,7 @@ class ForgetPassword(Resource):
         args = parser.parse_args()
         username = args['username']
 
-        hash_data = ResetPasswordCore.get_8_digit_auth_code(username)
+        hash_data = ResetPasswordCore.get_n_digit_auth_code(username)
 
         return_message = ''
         if hash_data == 'USER_NOT_FOUND':

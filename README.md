@@ -73,6 +73,7 @@ to database.
 ### Config.json
 Before running the app, make sure to check all values in `config.json` file.
 Default values are:
+
 _reset password token expire time_ = 300 seconds
 
 _verify random code token expire time_ = 300 seconds

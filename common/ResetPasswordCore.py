@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from jinja2 import Environment, FileSystemLoader
 
-import random
+import secrets
 import string
 import json
 import smtplib
@@ -22,14 +22,14 @@ SECRET_KEY = CONFIG.get('forget_password', {}).get('serializer_secret_key')
 class ResetPasswordCore:
     """Core Functions of reseting user's password."""
     @staticmethod
-    def get_8_digit_auth_code(username: str) -> str:
+    def get_n_digit_auth_code(username: str) -> str:
         """ Step 1: Start process of resetting password. Return hash format of
-        user's ID + random generated 8 digit code."""
+        user's ID + random generated N digit code."""
         id = DbHandler.get_user_id(username)
         if id == -1:
             return "USER_NOT_FOUND"
 
-        random_code = ResetPasswordCore.__generate_8_digit_code()
+        random_code = ResetPasswordCore.__generate_n_digit_code()
         forget_password_rendered_page = ResetPasswordCore.\
             __render_forget_password_page(random_code)
 
@@ -43,7 +43,7 @@ class ResetPasswordCore:
     @staticmethod
     def get_password_reset_token(hashed_data: str, user_input: str) -> str:
         """ Step 2: Return token for reseting password if user inputed correct
-        8 digit code."""
+        N digit code."""
         try:
             user_id = ResetPasswordCore.__verify_user_input_with_hashed_data(
                 hashed_data, user_input)
@@ -91,7 +91,7 @@ class ResetPasswordCore:
     @staticmethod
     def __verify_user_input_with_hashed_data(hashed_data: str,
                                              user_input: str) -> int:
-        """ Verify if user's inputed 8 digit code is correct, if so,
+        """ Verify if user's inputed N digit code is correct, if so,
         return users id."""
         hash = Serializer(SECRET_KEY)
         try:
@@ -125,7 +125,7 @@ class ResetPasswordCore:
     @staticmethod
     def __generate_hash_string(id: int, random_code: str) -> str:
         """ Create a hash that contains (user's ID and valid
-        random created 8 digit code) which expires in seconds read
+        random created N digit code) which expires in seconds read
         from config file. """
         expire_time = CONFIG.get('forget_password', {}).\
             get('validation_token_expire_seconds')
@@ -169,10 +169,13 @@ class ResetPasswordCore:
         smtp_server.quit()
 
     @staticmethod
-    def __generate_8_digit_code() -> str:
-        """ For generating random 8 digit of integers."""
+    def __generate_n_digit_code() -> str:
+        """ For generating random N digit of integers."""
+        code_length = CONFIG.get('forget_password', {}).\
+            get('reset_password_code_length')
+
         result_str = ''.join(
-            random.choice(string.digits) for i in range(8)
+            secrets.choice(string.digits) for i in range(code_length)
         )
         return result_str
 

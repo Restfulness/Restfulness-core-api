@@ -37,6 +37,7 @@
 	"forget_password": {
 		"serializer_secret_key": "VERY_SECRET",
 		"validation_token_expire_seconds": 300,
-		"reset_password_token_expire_seconds": 300
+		"reset_password_token_expire_seconds": 300,
+		"reset_password_code_length": 8
 	}
 }
