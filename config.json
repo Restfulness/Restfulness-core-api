@@ -1,6 +1,5 @@
 {
 	"host": "0.0.0.0",
-	"serializer_secret_key": "VERY_SECRET",
 	"routes": {
 		"user": {
 			"login": "/user/login",
@@ -34,5 +33,10 @@
 		"port": 587,
 		"email": "your_email@some_where.com",
 		"password": "your_password"
+	},
+	"forget_password": {
+		"serializer_secret_key": "VERY_SECRET",
+		"validation_token_expire_seconds": 300,
+		"reset_password_token_expire_seconds": 300
 	}
 }
