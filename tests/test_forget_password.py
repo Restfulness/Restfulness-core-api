@@ -34,7 +34,8 @@ def generate_random_string(length):
 
 def get_valid_code_from_hashed_data(hashed_data: str) -> str:
     """ Returns valid 8 digit code from hashed returned by server"""
-    hash = Serializer(CONFIG.get('serializer_secret_key'))
+    hash = Serializer(CONFIG.get('forget_password', {}).
+                      get('serializer_secret_key'))
     try:
         data = hash.loads(hashed_data)
     except SignatureExpired:

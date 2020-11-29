@@ -16,7 +16,7 @@ import smtplib
 with open('config.json', mode='r') as config_file:
     CONFIG = json.load(config_file)
 
-SECRET_KEY = CONFIG.get('serializer_secret_key')
+SECRET_KEY = CONFIG.get('forget_password', {}).get('serializer_secret_key')
 
 
 class ResetPasswordCore:
@@ -109,7 +109,10 @@ class ResetPasswordCore:
     @staticmethod
     def __generate_reset_password_token(id: int) -> str:
         """ Generate the main token that reset user's password."""
-        hash = Serializer(SECRET_KEY, expires_in=300)
+        expire_time = CONFIG.get('forget_password', {}).\
+            get('reset_password_token_expire_seconds')
+
+        hash = Serializer(SECRET_KEY, expires_in=expire_time)
         return(
             str(
                 hash.dumps({
@@ -122,8 +125,12 @@ class ResetPasswordCore:
     @staticmethod
     def __generate_hash_string(id: int, random_code: str) -> str:
         """ Create a hash that contains (user's ID and valid
-        random created 8 digit code) which expires in 300 seconds."""
-        hash = Serializer(SECRET_KEY, expires_in=300)
+        random created 8 digit code) which expires in seconds read
+        from config file. """
+        expire_time = CONFIG.get('forget_password', {}).\
+            get('validation_token_expire_seconds')
+
+        hash = Serializer(SECRET_KEY, expires_in=expire_time)
         return(
             str(
                 hash.dumps({

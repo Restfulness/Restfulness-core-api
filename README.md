@@ -69,6 +69,14 @@ sudo mysql_secure_installation
 Now change `username`, `password` and `db` in `config.json` to make the app able to connect
 to database.
 
+
+### Config.json
+Before running the app, make sure to check all values in `config.json` file.
+Default values are:
+_reset password token expire time_ = 300 seconds
+_verify random code token expire time_ = 300 seconds     
+
+
 ### Tests
 
 Something that is untested is broken!
