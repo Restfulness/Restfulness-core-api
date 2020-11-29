@@ -26,9 +26,7 @@ def generate_random_string(length):
     """
     For generating random username
     """
-    result_str = ''.join(
-        random.choice(string.ascii_lowercase) for i in range(length)
-    )
+    result_str = ''.join(random.choices(string.ascii_lowercase, k=length))
     return result_str
 
 
@@ -162,7 +160,6 @@ def test_verify_code_invalid_code_rejected(client):
         headers=HEADERS
     )
 
-    global RESET_PASSWORD_TOKEN
     assert res.status_code == 400
 
 
@@ -177,7 +174,6 @@ def test_verify_code_invalid_token_rejected(client):
         headers=HEADERS
     )
 
-    global RESET_PASSWORD_TOKEN
     assert res.status_code == 401
 
 
