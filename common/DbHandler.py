@@ -211,3 +211,29 @@ class DbHandler():
         user.update_password(new_password)
         db.session.commit()
         return 'OK'
+
+    @staticmethod
+    def update_link_categories(username: str, new_categories: list,
+                               link_id: int) -> str:
+        """ Update categories related to a link ID. """
+        link = Link.query.\
+            filter(Link.owner_id == DbHandler.get_user_id(username)).\
+            filter(Link.id == link_id).first()
+
+        if link is None:
+            return('LINK_NOT_FOUND')
+
+        link.categories = []
+        if new_categories:
+            for category_name in new_categories:
+                category_object = Category.query.filter_by(
+                    name=category_name
+                ).first()
+                if not category_object:
+                    category_object = Category(name=category_name)
+
+                category_object.related_link.append(link)
+
+        db.session.add(link)
+        db.session.commit()
+        return "OK"
