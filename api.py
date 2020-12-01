@@ -16,6 +16,7 @@ from resources.links.LinksGetter import LinksGetter
 from resources.categories.CategoriesGetter import CategoriesGetter
 from resources.links.LinksGetterByCategory import LinksGetterByCategory
 from resources.links.LinksGetterBySearch import LinksGetterBySearch
+from resources.links.LinksUpdateCategory import LinksUpdateCategory
 
 
 from db import db
@@ -97,6 +98,10 @@ api.add_resource(
 api.add_resource(
     ResetPassword,
     CONFIG.get('routes', {}).get('user', {}).get('reset_password')
+)
+api.add_resource(
+    LinksUpdateCategory,
+    CONFIG.get('routes', {}).get('links', {}).get('update_category')
 )
 
 

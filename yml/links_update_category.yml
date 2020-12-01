@@ -1,0 +1,59 @@
+Update categories related to a specific link ID
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+tags:
+  - name: "Links"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+  - name: "id"
+    in: "path"
+    description: "Link id to update its categories"
+    required: true
+    type: "integer"
+  - name: body
+    in: body
+    required: true
+    schema:
+      properties:
+        new_categories:
+          type: array
+          items:
+            type: string
+          description: "New categories that are going to be replaced with previous ones"
+          example: ["programming", "new_category"]
+        
+responses:
+  200:
+    description: "Categories updated."
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Categories updated."
+      example:
+        msg: "Categories updated."
+  404:
+    description: "Link ID not found!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Link ID not found!"
+      example:
+        msg: "Link ID not found!"
