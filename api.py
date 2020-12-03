@@ -9,6 +9,7 @@ from resources.user.Signup import Signup
 from resources.user.password.ForgetPassword import ForgetPassword
 from resources.user.password.VerifyCode import VerifyCode
 from resources.user.password.ResetPassword import ResetPassword
+from resources.user.Publicity import Publicity
 
 from resources.links.LinksDeleter import LinksDeleter
 from resources.links.LinksAdder import LinksAdder
@@ -102,6 +103,10 @@ api.add_resource(
 api.add_resource(
     LinksUpdateCategory,
     CONFIG.get('routes', {}).get('links', {}).get('update_category')
+)
+api.add_resource(
+    Publicity,
+    CONFIG.get('routes', {}).get('user', {}).get('publicity')
 )
 
 

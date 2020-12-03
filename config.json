@@ -6,7 +6,8 @@
 			"signup": "/user/signup",
 			"forget_password": "/user/password/forget",
 			"verify_code": "/user/password/verify",
-			"reset_password": "/user/password/reset"
+			"reset_password": "/user/password/reset",
+			"publicity": "/user/publicity"
 		},
 		"links":{
 			"main": "/links",

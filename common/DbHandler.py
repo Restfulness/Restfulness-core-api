@@ -236,4 +236,13 @@ class DbHandler():
 
         db.session.add(link)
         db.session.commit()
-        return "OK"
+        return 'OK'
+
+    @staticmethod
+    def update_user_publicity(username: str, publicity: bool) -> str:
+        """ Changes user publicity. """
+        User.query.filter_by(username=username).update(
+            dict(is_public=publicity)
+        )
+        db.session.commit()
+        return 'OK'
