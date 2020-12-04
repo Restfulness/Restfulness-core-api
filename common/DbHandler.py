@@ -6,6 +6,8 @@ from common.Category import Category
 
 from db import db
 
+from datetime import datetime
+
 
 class DbHandler():
     @staticmethod
@@ -68,6 +70,9 @@ class DbHandler():
 
                 category_object.related_link.append(new_link)
 
+        User.query.filter_by(username=username).update(
+            dict(time_new_link_added=datetime.now())
+        )
         db.session.add(new_link)
         db.session.commit()
         return new_link.id
@@ -217,6 +222,7 @@ class DbHandler():
     def reset_user_forgotten_password(user_id: int, new_password: str) -> str:
         user = User.query.filter_by(id=user_id).first()
         user.update_password(new_password)
+        user.time_profile_updated = datetime.now()
         db.session.commit()
         return 'OK'
 
@@ -251,6 +257,9 @@ class DbHandler():
         """ Changes user publicity. """
         User.query.filter_by(username=username).update(
             dict(is_public=publicity)
+        )
+        User.query.filter_by(username=username).update(
+            dict(time_profile_updated=datetime.now())
         )
         db.session.commit()
         return 'OK'

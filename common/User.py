@@ -13,8 +13,9 @@ class User(db.Model):
     links = db.relationship('Link', backref='owner')
     time_created = db.Column(db.DateTime(timezone=True),
                              server_default=func.now())
-    time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    time_profile_updated = db.Column(db.DateTime)
     is_public = db.Column(db.Boolean, default=True)
+    time_new_link_added = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
