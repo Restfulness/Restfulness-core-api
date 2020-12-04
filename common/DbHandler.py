@@ -45,11 +45,19 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def append_new_link(new_link: Link, categories_name: list) -> str:
+    def append_new_link(username: str, url: str, categories_name: list) -> int:
         """Check if category is already exists or not.
         If category exists, create object. Else create new one
         and then connect new link to categories
         """
+        current_user_object = DbHandler.get_user_object(
+            username=username
+        )
+        new_link = Link(
+            url=url,
+            owner=current_user_object
+        )
+
         if categories_name:
             for category_name in categories_name:
                 category_object = Category.query.filter_by(
@@ -62,7 +70,7 @@ class DbHandler():
 
         db.session.add(new_link)
         db.session.commit()
-        return "OK"
+        return new_link.id
 
     @staticmethod
     def remove_link(username: str, link_id: int) -> str:
