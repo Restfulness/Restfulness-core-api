@@ -15,6 +15,8 @@ HEADERS = {
 # Routes
 USER_SIGNUP_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('signup')
 USER_LOGIN_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('login')
+USER_PUBLICITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
+    'publicity')
 LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
 CATEGORIES_MAIN_ROUTE = CONFIG.get(
     'routes', {}).get('categories', {}).get('main')
@@ -111,6 +113,26 @@ def test_login_accepted(app, client):
 
     global TOKEN
     TOKEN = json.loads(res.get_data(as_text=True))["access_token"]
+    assert res.status_code == 200
+
+
+def test_update_user_publicity_accepted(client):
+    """url -i -H "Content-Type: application/json"
+    -H "Authorization: Bearer $x" -X PUT
+    -d '{"publicity": false}' localhost:5000/user/publicity
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {TOKEN}'
+    }
+    data = {
+        'publicity': False
+    }
+    res = client.put(
+        USER_PUBLICITY_ROUTE,
+        data=json.dumps(data),
+        headers=headers
+    )
     assert res.status_code == 200
 
 
@@ -330,7 +352,7 @@ def test_get_link_by_category_id_invalid_data_rejected(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     res = client.get(
-        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID+1}',
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID+100}',
         headers=headers
     )
     assert res.status_code == 404
