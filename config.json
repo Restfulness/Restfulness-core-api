@@ -7,7 +7,8 @@
 			"forget_password": "/user/password/forget",
 			"verify_code": "/user/password/verify",
 			"reset_password": "/user/password/reset",
-			"publicity": "/user/publicity"
+			"publicity": "/user/publicity",
+			"activity_list": "/user/activity"
 		},
 		"links":{
 			"main": "/links",

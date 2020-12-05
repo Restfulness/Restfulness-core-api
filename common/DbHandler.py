@@ -263,3 +263,38 @@ class DbHandler():
         )
         db.session.commit()
         return 'OK'
+
+    @staticmethod
+    def get_users_activity_list(date_from: str) -> list:
+        """ Return users activity as a list, starting
+        from `date_from` parameter. """
+        date_format = '%Y-%m-%d %H:%M:%S'  # ISO 8601
+        try:
+            date_from_object = datetime.strptime(
+                date_from,
+                date_format
+            )
+        except ValueError:
+            return('WRONG_FORMAT')
+
+        users_list = db.session.\
+            query(User.id, User.username, User.time_new_link_added).\
+            filter(User.time_new_link_added > date_from_object,
+                   User.is_public).all()
+
+        if users_list is None:
+            return('NOT_FOUND')
+
+        users_activity = []
+        for user in users_list:
+            total_num_of_links = Link.query.\
+                filter(Link.time_created > date_from,
+                       Link.owner_id == user[0]).count()
+            users_activity.append(dict(
+                username=user[1],
+                last_link_added_date=user[2].strftime(date_format),
+                total_links=total_num_of_links
+                )
+            )
+
+        return(users_activity)
