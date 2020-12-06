@@ -42,5 +42,8 @@
 		"validation_token_expire_seconds": 300,
 		"reset_password_token_expire_seconds": 300,
 		"reset_password_code_length": 8
+	},
+	"socializing": {
+		"date_format": "%Y-%m-%d %H:%M"
 	}
 }

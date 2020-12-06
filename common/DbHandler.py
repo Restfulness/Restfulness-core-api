@@ -7,6 +7,11 @@ from common.Category import Category
 from db import db
 
 from datetime import datetime
+import json
+
+# Load config file
+with open('config.json', mode='r') as config_file:
+    CONFIG = json.load(config_file)
 
 
 class DbHandler():
@@ -268,7 +273,7 @@ class DbHandler():
     def get_users_activity_list(date_from: str) -> list:
         """ Return users activity as a list, starting
         from `date_from` parameter. """
-        date_format = '%Y-%m-%d %H:%M'
+        date_format = CONFIG.get('socializing', {}).get('date_format')
         try:
             date_from_object = datetime.strptime(
                 date_from,
