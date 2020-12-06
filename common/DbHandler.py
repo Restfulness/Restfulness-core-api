@@ -282,7 +282,7 @@ class DbHandler():
             filter(User.time_new_link_added > date_from_object,
                    User.is_public).all()
 
-        if users_list is None:
+        if not users_list:
             return('NOT_FOUND')
 
         users_activity = []

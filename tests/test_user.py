@@ -17,6 +17,8 @@ USER_SIGNUP_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('signup')
 USER_LOGIN_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('login')
 USER_PUBLICITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
     'publicity')
+USER_ACTIVITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
+    'activity_list')
 LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
 CATEGORIES_MAIN_ROUTE = CONFIG.get(
     'routes', {}).get('categories', {}).get('main')
@@ -418,6 +420,54 @@ def test_update_categories_of_a_link_delete_all_categories_accepted(client):
         data=json.dumps(data)
     )
     assert res.status_code == 200
+
+
+def test_get_user_activity_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{"date_from": "2020-12-1 16:09"}' localhost:5000/user/activity
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 16:09"}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_activity_invalid_date_failed(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "20-12-1 16:09"}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
+
+
+def test_get_user_activity_not_found_failed(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2025-12-1 15:00"}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
 
 
 def test_delete_link_by_id_accepted(client):
