@@ -422,6 +422,25 @@ def test_update_categories_of_a_link_delete_all_categories_accepted(client):
     assert res.status_code == 200
 
 
+def test_update_user_publicity_to_true_accepted(client):
+    """Change users publicity to true, to pass the next test
+    if there is no other public user in DB
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {TOKEN}'
+    }
+    data = {
+        'publicity': True
+    }
+    res = client.put(
+        USER_PUBLICITY_ROUTE,
+        data=json.dumps(data),
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
 def test_get_user_activity_accepted(client):
     """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
     -X POST -d '{"date_from": "2020-12-1 16:09"}' localhost:5000/user/activity
