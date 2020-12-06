@@ -72,13 +72,18 @@ to database.
 
 ### Config.json
 Before running the app, make sure to check all values in `config.json` file.
-Default values are:
 
-_reset password token expire time_ = 300 seconds
+* **Default values:**
 
-_verify random code token expire time_ = 300 seconds
+      * _reset password token expire time_ = 300 seconds
+      * _verify random code token expire time_ = 300 seconds
+      * _reset password code length_ = 8
+      * _serializer secret key_ = "VERY_SECRET" _#Should be changed!!!_
 
-_reset password code length_ = 8
+* **SMTP:**
+
+  If you want to be able to enable sending Email part, you have to configure `SMTP` part in config file.
+  (If you don't have any service, you can use [Google's Free SMTP Server](https://www.siteground.com/kb/google_free_smtp_server/), but if you are using this, please make sure to [Enable less secure apps to access Gmail](https://hotter.io/docs/email-accounts/secure-app-gmail/)).
 
 
 ### Tests

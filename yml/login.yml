@@ -19,7 +19,7 @@ parameters:
           type: string
           description: Your password
       example:
-        username: "test"
+        username: "test@somewhere.com"
         password: "test"
 responses:
   "200":

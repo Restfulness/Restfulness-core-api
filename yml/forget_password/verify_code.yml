@@ -24,7 +24,7 @@ parameters:
           example: "86119547"
 responses:
   200:
-    description: "Return token for resetting password"
+    description: "Return token for resetting password if user inputed correct code"
     schema:
       type: object
       properties:
@@ -32,7 +32,7 @@ responses:
           type: string
           description: "Token for resetting user's password"
       example:
-        hashed_data: "eyJhb..."
+        reset_password_token: "eyJhb..."
   400:
     description: "User inputed code is incorrect"
     schema:
