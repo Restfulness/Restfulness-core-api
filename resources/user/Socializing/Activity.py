@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required
-# from flasgger import swag_from
+from flasgger import swag_from
 
 from common.DbHandler import DbHandler
 
@@ -11,8 +11,8 @@ parser.add_argument('date_from', type=str, required=True)
 
 class Activity(Resource):
     @jwt_required
-    # @swag_from('../../yml/links_get.yml')
-    def get(self):
+    @swag_from('../../../yml/socializing/activity_get.yml')
+    def post(self):
         """ Return users activities from a special date. """
         args = parser.parse_args()
         date_from = args['date_from']
@@ -21,7 +21,7 @@ class Activity(Resource):
         if activity_list == 'WRONG_FORMAT':
             return make_response(
                 jsonify(
-                    msg='Input does not match format "YYYY-MM-DD hh:mm:ss"'
+                    msg="Input does not match format 'YYYY-MM-DD hh:mm'"
                 ),
                 400
             )

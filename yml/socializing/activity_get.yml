@@ -1,0 +1,74 @@
+Return public users activities, starting from given time
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+tags:
+  - name: "Socializing"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      required:
+        - date_from
+      properties:
+        date_from:
+          type: string
+          description: "Starting date with this format: YYYY-MM-DD hh:mm"
+          example: "2020-12-05 19:12"
+
+        
+responses:
+  200:
+    description: "Return activities list"
+    schema:
+        type: array
+        items:
+          type: object
+          properties:
+            username:
+              type: string
+            total_links:
+              type: int
+            last_link_added_date:
+              type: string
+        description: "Link related categories"
+        example:
+            [
+                {"username": "test1@gmail.com", "total_links": 11, "last_link_added_date": "2020-12-05 19:15"},
+                {"username": "test2@yahoo.com", "total_links": 8, "last_link_added_date": "2020-12-11 05:37"}
+            ]
+  400:
+    description: "Input does not match format 'YYYY-MM-DD hh:mm'"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Input does not match format 'YYYY-MM-DD hh:mm'"
+      example:
+        msg: "Input does not match format 'YYYY-MM-DD hh:mm'"
+  404:
+    description: Didn't found any activity from that time
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Didn't found any activity from that time
+      example:
+        msg: Didn't found any activity from that time

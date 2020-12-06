@@ -268,7 +268,7 @@ class DbHandler():
     def get_users_activity_list(date_from: str) -> list:
         """ Return users activity as a list, starting
         from `date_from` parameter. """
-        date_format = '%Y-%m-%d %H:%M:%S'  # ISO 8601
+        date_format = '%Y-%m-%d %H:%M'
         try:
             date_from_object = datetime.strptime(
                 date_from,
