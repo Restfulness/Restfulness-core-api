@@ -296,9 +296,10 @@ class DbHandler():
                 filter(Link.time_created > date_from,
                        Link.owner_id == user[0]).count()
             users_activity.append(dict(
+                user_id=user[0],
                 username=user[1],
                 last_link_added_date=user[2].strftime(date_format),
-                total_links=total_num_of_links
+                total_links_added_after_given_time=total_num_of_links
                 )
             )
 

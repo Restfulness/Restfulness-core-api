@@ -40,17 +40,20 @@ responses:
         items:
           type: object
           properties:
+            user_id:
+              type: int
             username:
               type: string
-            total_links:
+            total_links_added_after_given_time:
               type: int
+              description: Number of total links that are added from given time
             last_link_added_date:
               type: string
         description: "Link related categories"
         example:
             [
-                {"username": "test1@gmail.com", "total_links": 11, "last_link_added_date": "2020-12-05 19:15"},
-                {"username": "test2@yahoo.com", "total_links": 8, "last_link_added_date": "2020-12-11 05:37"}
+              {"user_id": 8, "username": "test1@gmail.com", "total_links_added_after_given_time": 11, "last_link_added_date": "2020-12-05 19:15"},
+              {"user_id": 31, "username": "test2@yahoo.com", "total_links_added_after_given_time": 8, "last_link_added_date": "2020-12-11 05:37"}
             ]
   400:
     description: "Input does not match format 'YYYY-MM-DD hh:mm'"
