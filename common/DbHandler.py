@@ -12,6 +12,7 @@ import json
 # Load config file
 with open('config.json', mode='r') as config_file:
     CONFIG = json.load(config_file)
+DATE_FORMAT = CONFIG.get('socializing', {}).get('date_format')
 
 
 class DbHandler():
@@ -121,6 +122,7 @@ class DbHandler():
             {
                 "id": link.id,
                 "url": link.url,
+                "added_date": link.time_created.strftime(DATE_FORMAT),
                 "categories": [
                     {
                         "id": category.id,
@@ -277,11 +279,10 @@ class DbHandler():
     def get_users_activity_list(date_from: str) -> list:
         """ Return users activity as a list, starting
         from `date_from` parameter. """
-        date_format = CONFIG.get('socializing', {}).get('date_format')
         try:
             date_from_object = datetime.strptime(
                 date_from,
-                date_format
+                DATE_FORMAT
             )
         except ValueError:
             return('WRONG_FORMAT')
@@ -303,7 +304,7 @@ class DbHandler():
             users_activity.append(dict(
                 user_id=user[0],
                 username=user[1],
-                last_link_added_date=user[2].strftime(date_format),
+                last_link_added_date=user[2].strftime(DATE_FORMAT),
                 total_links_added_after_given_time=total_num_of_links
                 )
             )
