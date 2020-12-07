@@ -109,7 +109,8 @@ class DbHandler():
         user_id = DbHandler.get_user_id(username)
 
         if link_id is None:
-            link_objects = Link.query.filter_by(owner_id=user_id).all()
+            link_objects = Link.query.filter_by(owner_id=user_id).\
+                order_by(Link.time_created.desc()).all()
         else:
             link_objects = Link.query.filter_by(
                 owner_id=user_id,
@@ -172,6 +173,7 @@ class DbHandler():
             join(Category, Link.categories).\
             filter(Link.owner_id == user_id).\
             filter(Category.id == category_id).\
+            order_by(Link.time_created.desc()).\
             all()
 
         requested_category_object = Category.query.filter_by(
@@ -203,7 +205,9 @@ class DbHandler():
         search_pattern = f'%{pattern}%'
 
         link_objects = Link.query.filter(Link.owner_id == user_id).\
-            filter(Link.url.like(search_pattern)).all()
+            filter(Link.url.like(search_pattern)).order_by(
+                Link.time_created.desc()
+            ).all()
 
         if not link_objects:
             return 'PATTERN_NOT_FOUND'
@@ -285,7 +289,8 @@ class DbHandler():
         users_list = db.session.\
             query(User.id, User.username, User.time_new_link_added).\
             filter(User.time_new_link_added > date_from_object,
-                   User.is_public).all()
+                   User.is_public).order_by(User.time_new_link_added.desc()).\
+            all()
 
         if not users_list:
             return('NOT_FOUND')
