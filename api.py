@@ -19,6 +19,7 @@ from resources.categories.CategoriesGetter import CategoriesGetter
 from resources.links.LinksGetterByCategory import LinksGetterByCategory
 from resources.links.LinksGetterBySearch import LinksGetterBySearch
 from resources.links.LinksUpdateCategory import LinksUpdateCategory
+from resources.links.LinksByUserId import LinksByUserId
 
 
 from db import db
@@ -113,7 +114,10 @@ api.add_resource(
     Activity,
     CONFIG.get('routes', {}).get('user', {}).get('activity_list')
 )
-
+api.add_resource(
+    LinksByUserId,
+    CONFIG.get('routes', {}).get('links', {}).get('by_user_id')
+)
 
 @app.before_first_request
 def create_tables():

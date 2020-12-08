@@ -17,7 +17,8 @@
 			"by_category_id": "/links/category/<int:id>",
 			"by_pattern": "/links/search",
 			"by_pattern_string": "/links/search/<string:pattern>",
-			"update_category": "/links/<int:id>/category"
+			"update_category": "/links/<int:id>/category",
+			"by_user_id": "/user/<int:id>/links"
 		},
 		"categories": {
 			"main": "/categories",

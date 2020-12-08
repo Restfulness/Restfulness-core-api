@@ -1,5 +1,6 @@
 # NOTE: This class is for handling all calls to database
 
+from sqlalchemy.sql.sqltypes import DateTime
 from common.Link import Link
 from common.User import User
 from common.Category import Category
@@ -106,15 +107,23 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def get_links(user_id: int, link_id: int) -> list:
-        if link_id is None:
-            link_objects = Link.query.filter_by(owner_id=user_id).\
-                order_by(Link.time_created.desc()).all()
-        else:
+    def get_links(user_id: int, link_id: int,
+                  date_from: DateTime = None) -> list:
+        """ Return links by their Id, their created date
+        or all of the links if those two are not provided.
+        """
+        if link_id is not None:
             link_objects = Link.query.filter_by(
                 owner_id=user_id,
                 id=link_id
             ).all()
+        elif date_from is not None:
+            link_objects = Link.query.filter(Link.owner_id == user_id).\
+                filter(Link.time_created > date_from).\
+                order_by(Link.time_created.desc()).all()
+        else:
+            link_objects = Link.query.filter_by(owner_id=user_id).\
+                order_by(Link.time_created.desc()).all()
 
         links_values = [
             {
@@ -308,3 +317,26 @@ class DbHandler():
             )
 
         return(users_activity)
+
+    @staticmethod
+    def get_public_user_links(user_id: int, date_from: str = None) -> list:
+        user_status = User.query.with_entities(User.is_public).\
+            filter_by(id=user_id).first()
+
+        if user_status is None:
+            return('USER_NOT_FOUND')
+        elif user_status[0] is False:
+            return('USER_NOT_PUBLIC')
+
+        if date_from:
+            try:
+                date_from_object = datetime.strptime(
+                    date_from,
+                    DATE_FORMAT
+                )
+            except ValueError:
+                return('WRONG_DATE_FORMAT')
+
+            return(DbHandler.get_links(user_id, None, date_from_object))
+
+        return(DbHandler.get_links(user_id, None))
