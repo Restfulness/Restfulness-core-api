@@ -13,8 +13,8 @@ class LinksGetter(Resource):
         """ If client requests for /links will get whole links;
         else if requests for /links/[ID] will get specified link.
         """
-        current_user_username = get_jwt_identity()
-        links_list = DbHandler.get_links(current_user_username, id)
+        user_id = DbHandler.get_user_id(get_jwt_identity())
+        links_list = DbHandler.get_links(user_id, id)
         if links_list:
             return make_response(
                 jsonify(links_list),

@@ -106,9 +106,7 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def get_links(username: str, link_id: int) -> list:
-        user_id = DbHandler.get_user_id(username)
-
+    def get_links(user_id: int, link_id: int) -> list:
         if link_id is None:
             link_objects = Link.query.filter_by(owner_id=user_id).\
                 order_by(Link.time_created.desc()).all()
