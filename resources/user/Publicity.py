@@ -32,7 +32,7 @@ class Publicity(Resource):
             )
 
     @jwt_required
-    # @swag_from('../../yml/publicity_put.yml')
+    @swag_from('../../yml/publicity_get.yml')
     def get(self):
         """ Returns user's publicity. """
         current_user_username = get_jwt_identity()

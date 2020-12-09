@@ -1,0 +1,32 @@
+Get publicity for owner of current token
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+tags:
+  - name: User
+parameters:
+  - name: Authorization
+    in: header
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+example:
+  Authorization: "Bearer eyJ0eXAiOi...."
+responses:
+  200:
+    description: "Return publicity"
+    schema:
+      type: object
+      properties:
+        publicity:
+          type: boolean 
+          description: User's publicity
+      publicity:
+        msg: true
