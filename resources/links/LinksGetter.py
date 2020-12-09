@@ -15,13 +15,13 @@ class LinksGetter(Resource):
         """
         user_id = DbHandler.get_user_id(get_jwt_identity())
         links_list = DbHandler.get_links(user_id, id)
-        if links_list:
-            return make_response(
-                jsonify(links_list),
-                200
-            )
-        else:
+        if links_list == 'LINK_NOT_FOUND':
             return make_response(
                 jsonify(msg="Link not found!"),
                 404
+            )
+        else:
+            return make_response(
+                jsonify(links_list),
+                200
             )

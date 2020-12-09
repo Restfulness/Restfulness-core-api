@@ -107,7 +107,7 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def get_links(user_id: int, link_id: int,
+    def get_links(user_id: int, link_id: int = None,
                   date_from: DateTime = None) -> list:
         """ Return links by their Id, their created date
         or all of the links if those two are not provided.
@@ -124,6 +124,9 @@ class DbHandler():
         else:
             link_objects = Link.query.filter_by(owner_id=user_id).\
                 order_by(Link.time_created.desc()).all()
+
+        if not link_objects:
+            return('LINK_NOT_FOUND')
 
         links_values = [
             {
@@ -337,6 +340,6 @@ class DbHandler():
             except ValueError:
                 return('WRONG_DATE_FORMAT')
 
-            return(DbHandler.get_links(user_id, None, date_from_object))
+            return(DbHandler.get_links(user_id, date_from=date_from_object))
 
-        return(DbHandler.get_links(user_id, None))
+        return(DbHandler.get_links(user_id))

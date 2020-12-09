@@ -119,6 +119,7 @@ api.add_resource(
     CONFIG.get('routes', {}).get('links', {}).get('by_user_id')
 )
 
+
 @app.before_first_request
 def create_tables():
     db.create_all()
