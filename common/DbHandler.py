@@ -343,3 +343,9 @@ class DbHandler():
             return(DbHandler.get_links(user_id, date_from=date_from_object))
 
         return(DbHandler.get_links(user_id))
+
+    @staticmethod
+    def get_user_publicity(user_id: int) -> bool:
+        """ Returns user's publicity. """
+        return(User.query.with_entities(User.is_public).
+               filter_by(id=user_id).first()[0])

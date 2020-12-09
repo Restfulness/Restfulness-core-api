@@ -30,3 +30,17 @@ class Publicity(Resource):
                 jsonify(msg="Server Error!"),
                 500
             )
+
+    @jwt_required
+    # @swag_from('../../yml/publicity_put.yml')
+    def get(self):
+        """ Returns user's publicity. """
+        current_user_username = get_jwt_identity()
+        user_status = DbHandler.get_user_publicity(DbHandler.get_user_id(
+            current_user_username
+        ))
+
+        return make_response(
+                jsonify(publicity=user_status),
+                200
+            )
