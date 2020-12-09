@@ -1,0 +1,100 @@
+Return public user links (You can provide specific date to get all links created after that date)
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+tags:
+  - name: "Links"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+  - name: "id"
+    in: "path"
+    description: "User id to get"
+    required: true
+    type: "integer"
+  - name: body
+    in: body
+    required: true
+    schema:
+      properties:
+        date_from:
+          type: string
+          description: "Starting date with this format: YYYY-MM-DD hh:mm `Not Required`"
+          example: "2020-12-05 19:12"
+
+responses:
+  200:
+    description: "Return bookmarks"
+    schema:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+          description: "Link related categories"
+        url:
+          type: string
+          description: "Link url"
+        id:
+          type: int
+          description: "Id of link"
+        added_date:
+          type: string
+          description: "Date that link is added in format `YYYY-MM-DD hh:mm`"
+      example:
+        categories: [
+          {"id": 1, "name": "programming"},
+          {"id": 5, "name": "searching"},
+          {"id": 11, "name": "Q and A"}
+        ]
+        url: https://stackoverflow.com
+        id: 2
+        added_date: "2020-12-07 12:28"
+  400:
+    description: "Input date does not match format 'YYYY-MM-DD hh:mm'"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Input date does not match format 'YYYY-MM-DD hh:mm'"
+      example:
+        msg: "Input date does not match format 'YYYY-MM-DD hh:mm'"
+  403:
+    description: User is not public!
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: User is not public!
+      example:
+        msg: User is not public!
+  404:
+    description: User not found! OR Link not found!
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: User not found! OR Link not found!
+      example:
+        msg: User not found!
