@@ -141,6 +141,19 @@ def test_update_user_publicity_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_user_publicity(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {TOKEN}'
+    }
+    res = client.get(
+        USER_PUBLICITY_ROUTE,
+        headers=headers
+    )
+    assert res.status_code == 200
+    assert json.loads(res.get_data(as_text=True))['publicity'] is False
+
+
 def test_login_failed(app, client):
     data = {
         "username": "USER_THAT_DOESNT_EXISTS",
