@@ -8,12 +8,8 @@ from common.Category import Category
 from db import db
 
 from datetime import datetime
-import json
 
-# Load config file
-with open('config.json', mode='r') as config_file:
-    CONFIG = json.load(config_file)
-DATE_FORMAT = CONFIG.get('socializing', {}).get('date_format')
+DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 
 class DbHandler():
