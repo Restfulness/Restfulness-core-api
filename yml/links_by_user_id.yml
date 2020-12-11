@@ -1,4 +1,4 @@
-Get bookmarks for owner of current token
+Return public user links (You can provide specific date to get all links created after that date)
 ---
 openapi: 3.0.0
 components:
@@ -9,22 +9,31 @@ components:
       bearerFormat: JWT
 security:
   - bearerAuth: []
+consumes:
+  "application/json"
 tags:
   - name: "Links"
 parameters:
-  - name: Authorization
-    in: header
+  - in: header
+    name: Authorization
     description: "Send like this: Bearer [TOKEN]"
     type: string
     required: true
   - name: "id"
     in: "path"
-    description: "Link id to get"
-    required: false
+    description: "User id to get"
+    required: true
     type: "integer"
-example:
-  Authorization: "Bearer eyJ0eXAiOi...."
-  id: 1
+  - name: body
+    in: body
+    required: true
+    schema:
+      properties:
+        date_from:
+          type: string
+          description: "Starting date with this format: YYYY-MM-DD hh:mm `Not Required`"
+          example: "2020-12-05 19:12"
+
 responses:
   200:
     description: "Return bookmarks"
@@ -59,13 +68,33 @@ responses:
         url: https://stackoverflow.com
         id: 2
         added_date: "2020-12-07 12:28"
-  404:
-    description: "Link ID not found"
+  400:
+    description: "Input date does not match format 'YYYY-MM-DD hh:mm'"
     schema:
       type: object
       properties:
         msg:
           type: string
-          description: Link not found!
+          description: "Input date does not match format 'YYYY-MM-DD hh:mm'"
       example:
-        msg: Link not found!
+        msg: "Input date does not match format 'YYYY-MM-DD hh:mm'"
+  403:
+    description: User is not public!
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: User is not public!
+      example:
+        msg: User is not public!
+  404:
+    description: User not found! OR Link not found!
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: User not found! OR Link not found!
+      example:
+        msg: User not found!

@@ -15,6 +15,10 @@ HEADERS = {
 # Routes
 USER_SIGNUP_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('signup')
 USER_LOGIN_ROUTE = CONFIG.get('routes', {}).get('user', {}).get('login')
+USER_PUBLICITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
+    'publicity')
+USER_ACTIVITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
+    'activity_list')
 LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
 CATEGORIES_MAIN_ROUTE = CONFIG.get(
     'routes', {}).get('categories', {}).get('main')
@@ -24,12 +28,15 @@ LINKS_BY_SEARCH_ROUTE = CONFIG.get(
     'routes', {}).get('links', {}).get('by_pattern')
 LINKS_UPDATE_CATEGORY = CONFIG.get(
     'routes', {}).get('links', {}).get('update_category')
+LINKS_BY_USER_ID = CONFIG.get(
+    'routes', {}).get('links', {}).get('by_user_id')
 
 
 TOKEN = ""
 NEW_CREATED_LINK_ID = ""
 NEW_CREATED_CATEGORY_ID = ""
 NEW_CATEGORIES = ["test_1", "test_2"]
+NEW_CREATED_USER_ID = ""
 
 
 def generate_random_string(length):
@@ -112,6 +119,39 @@ def test_login_accepted(app, client):
     global TOKEN
     TOKEN = json.loads(res.get_data(as_text=True))["access_token"]
     assert res.status_code == 200
+
+
+def test_update_user_publicity_accepted(client):
+    """url -i -H "Content-Type: application/json"
+    -H "Authorization: Bearer $x" -X PUT
+    -d '{"publicity": false}' localhost:5000/user/publicity
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {TOKEN}'
+    }
+    data = {
+        'publicity': False
+    }
+    res = client.put(
+        USER_PUBLICITY_ROUTE,
+        data=json.dumps(data),
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_publicity(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {TOKEN}'
+    }
+    res = client.get(
+        USER_PUBLICITY_ROUTE,
+        headers=headers
+    )
+    assert res.status_code == 200
+    assert json.loads(res.get_data(as_text=True))['publicity'] is False
 
 
 def test_login_failed(app, client):
@@ -330,7 +370,7 @@ def test_get_link_by_category_id_invalid_data_rejected(client):
         'Authorization': f"Bearer {TOKEN}"
     }
     res = client.get(
-        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID+1}',
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID+100}',
         headers=headers
     )
     assert res.status_code == 404
@@ -396,6 +436,173 @@ def test_update_categories_of_a_link_delete_all_categories_accepted(client):
         data=json.dumps(data)
     )
     assert res.status_code == 200
+
+
+def test_update_user_publicity_to_true_accepted(client):
+    """Change users publicity to true, to pass the next test
+    if there is no other public user in DB
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {TOKEN}'
+    }
+    data = {
+        'publicity': True
+    }
+    res = client.put(
+        USER_PUBLICITY_ROUTE,
+        data=json.dumps(data),
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_activity_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{"date_from": "2020-12-1 16:09"}' localhost:5000/user/activity
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 16:09"}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+
+    global NEW_CREATED_USER_ID
+    NEW_CREATED_USER_ID = json.loads(
+        res.get_data(as_text=True))[0]['user_id']
+    assert res.status_code == 200
+
+
+def test_get_user_activity_invalid_date_failed(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "20-12-1 16:09"}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
+
+
+def test_get_user_activity_not_found_failed(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2025-12-1 15:00"}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
+
+
+def test_get_public_user_links_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{}' localhost:5000/user/1/links
+    """
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {}
+
+    res = client.post(
+        address,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_public_user_links_with_date_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{"date_from": "2020-12-1 15:00"}' localhost:5000/user/1/links
+    """
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 15:00"}
+
+    res = client.post(
+        address,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_public_user_links_user_not_found_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID+1000)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 15:00"}
+
+    res = client.post(
+        address,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
+
+
+def test_get_public_user_links_wrong_date_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-120-1 15:00"}
+
+    res = client.post(
+        address,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
+
+
+def test_get_public_user_links_no_link_found_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2025-12-1 15:00"}
+
+    res = client.post(
+        address,
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
 
 
 def test_delete_link_by_id_accepted(client):

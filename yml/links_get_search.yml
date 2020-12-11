@@ -17,14 +17,13 @@ parameters:
     description: "Send like this: Bearer [TOKEN]"
     type: string
     required: true
-  - name: "word"
+  - name: "pattern"
     in: "path"
     description: "Word to contain"
     required: true
     type: string
 example:
   Authorization: "Bearer eyJ0eXAiOi...."
-  id: 1
 responses:
   200:
     description: "Return bookmarks that contain special key word in their URL"

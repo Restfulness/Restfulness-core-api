@@ -1,10 +1,15 @@
 # NOTE: This class is for handling all calls to database
 
+from sqlalchemy.sql.sqltypes import DateTime
 from common.Link import Link
 from common.User import User
 from common.Category import Category
 
 from db import db
+
+from datetime import datetime
+
+DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 
 class DbHandler():
@@ -45,11 +50,19 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def append_new_link(new_link: Link, categories_name: list) -> str:
+    def append_new_link(username: str, url: str, categories_name: list) -> int:
         """Check if category is already exists or not.
         If category exists, create object. Else create new one
         and then connect new link to categories
         """
+        current_user_object = DbHandler.get_user_object(
+            username=username
+        )
+        new_link = Link(
+            url=url,
+            owner=current_user_object
+        )
+
         if categories_name:
             for category_name in categories_name:
                 category_object = Category.query.filter_by(
@@ -60,9 +73,12 @@ class DbHandler():
 
                 category_object.related_link.append(new_link)
 
+        User.query.filter_by(username=username).update(
+            dict(time_new_link_added=datetime.now())
+        )
         db.session.add(new_link)
         db.session.commit()
-        return "OK"
+        return new_link.id
 
     @staticmethod
     def remove_link(username: str, link_id: int) -> str:
@@ -87,21 +103,32 @@ class DbHandler():
         return "OK"
 
     @staticmethod
-    def get_links(username: str, link_id: int) -> list:
-        user_id = DbHandler.get_user_id(username)
-
-        if link_id is None:
-            link_objects = Link.query.filter_by(owner_id=user_id).all()
-        else:
+    def get_links(user_id: int, link_id: int = None,
+                  date_from: DateTime = None) -> list:
+        """ Return links by their Id, their created date
+        or all of the links if those two are not provided.
+        """
+        if link_id is not None:
             link_objects = Link.query.filter_by(
                 owner_id=user_id,
                 id=link_id
             ).all()
+        elif date_from is not None:
+            link_objects = Link.query.filter(Link.owner_id == user_id).\
+                filter(Link.time_created > date_from).\
+                order_by(Link.time_created.desc()).all()
+        else:
+            link_objects = Link.query.filter_by(owner_id=user_id).\
+                order_by(Link.time_created.desc()).all()
+
+        if not link_objects:
+            return('LINK_NOT_FOUND')
 
         links_values = [
             {
                 "id": link.id,
                 "url": link.url,
+                "added_date": link.time_created.strftime(DATE_FORMAT),
                 "categories": [
                     {
                         "id": category.id,
@@ -154,6 +181,7 @@ class DbHandler():
             join(Category, Link.categories).\
             filter(Link.owner_id == user_id).\
             filter(Category.id == category_id).\
+            order_by(Link.time_created.desc()).\
             all()
 
         requested_category_object = Category.query.filter_by(
@@ -185,7 +213,9 @@ class DbHandler():
         search_pattern = f'%{pattern}%'
 
         link_objects = Link.query.filter(Link.owner_id == user_id).\
-            filter(Link.url.like(search_pattern)).all()
+            filter(Link.url.like(search_pattern)).order_by(
+                Link.time_created.desc()
+            ).all()
 
         if not link_objects:
             return 'PATTERN_NOT_FOUND'
@@ -209,6 +239,7 @@ class DbHandler():
     def reset_user_forgotten_password(user_id: int, new_password: str) -> str:
         user = User.query.filter_by(id=user_id).first()
         user.update_password(new_password)
+        user.time_profile_updated = datetime.now()
         db.session.commit()
         return 'OK'
 
@@ -236,4 +267,81 @@ class DbHandler():
 
         db.session.add(link)
         db.session.commit()
-        return "OK"
+        return 'OK'
+
+    @staticmethod
+    def update_user_publicity(username: str, publicity: bool) -> str:
+        """ Changes user publicity. """
+        User.query.filter_by(username=username).update(
+            dict(is_public=publicity)
+        )
+        User.query.filter_by(username=username).update(
+            dict(time_profile_updated=datetime.now())
+        )
+        db.session.commit()
+        return 'OK'
+
+    @staticmethod
+    def get_users_activity_list(date_from: str) -> list:
+        """ Return users activity as a list, starting
+        from `date_from` parameter. """
+        try:
+            date_from_object = datetime.strptime(
+                date_from,
+                DATE_FORMAT
+            )
+        except ValueError:
+            return('WRONG_FORMAT')
+
+        users_list = db.session.\
+            query(User.id, User.username, User.time_new_link_added).\
+            filter(User.time_new_link_added > date_from_object,
+                   User.is_public).order_by(User.time_new_link_added.desc()).\
+            all()
+
+        if not users_list:
+            return('NOT_FOUND')
+
+        users_activity = []
+        for user in users_list:
+            total_num_of_links = Link.query.\
+                filter(Link.time_created > date_from,
+                       Link.owner_id == user[0]).count()
+            users_activity.append(dict(
+                user_id=user[0],
+                username=user[1],
+                last_link_added_date=user[2].strftime(DATE_FORMAT),
+                total_links_added_after_given_time=total_num_of_links
+                )
+            )
+
+        return(users_activity)
+
+    @staticmethod
+    def get_public_user_links(user_id: int, date_from: str = None) -> list:
+        user_status = User.query.with_entities(User.is_public).\
+            filter_by(id=user_id).first()
+
+        if user_status is None:
+            return('USER_NOT_FOUND')
+        elif user_status[0] is False:
+            return('USER_NOT_PUBLIC')
+
+        if date_from:
+            try:
+                date_from_object = datetime.strptime(
+                    date_from,
+                    DATE_FORMAT
+                )
+            except ValueError:
+                return('WRONG_DATE_FORMAT')
+
+            return(DbHandler.get_links(user_id, date_from=date_from_object))
+
+        return(DbHandler.get_links(user_id))
+
+    @staticmethod
+    def get_user_publicity(user_id: int) -> bool:
+        """ Returns user's publicity. """
+        return(User.query.with_entities(User.is_public).
+               filter_by(id=user_id).first()[0])

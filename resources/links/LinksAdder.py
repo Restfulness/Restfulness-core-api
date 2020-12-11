@@ -4,7 +4,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
 
 from common.DbHandler import DbHandler
-from common.Link import Link
 
 import validators
 
@@ -33,22 +32,8 @@ class LinksAdder(Resource):
                         "http://example.com or https://example.com"), 400
             )
 
-        current_user_object = DbHandler.get_user_object(
-            username=current_user_username
+        link_id = DbHandler.append_new_link(current_user_username, url,
+                                            categories_name)
+        return make_response(
+            jsonify(id=link_id), 200
         )
-        new_link = Link(
-            url=url,
-            owner=current_user_object
-        )
-
-        if DbHandler.append_new_link(
-            new_link=new_link,
-            categories_name=categories_name
-        ) == "OK":
-            return make_response(
-                jsonify(id=new_link.id), 200
-            )
-        else:
-            return make_response(
-                jsonify(msg="Failed to add new link"), 500
-            )

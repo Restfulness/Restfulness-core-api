@@ -6,7 +6,9 @@
 			"signup": "/user/signup",
 			"forget_password": "/user/password/forget",
 			"verify_code": "/user/password/verify",
-			"reset_password": "/user/password/reset"
+			"reset_password": "/user/password/reset",
+			"publicity": "/user/publicity",
+			"activity_list": "/user/activity"
 		},
 		"links":{
 			"main": "/links",
@@ -15,7 +17,8 @@
 			"by_category_id": "/links/category/<int:id>",
 			"by_pattern": "/links/search",
 			"by_pattern_string": "/links/search/<string:pattern>",
-			"update_category": "/links/<int:id>/category"
+			"update_category": "/links/<int:id>/category",
+			"by_user_id": "/user/<int:id>/links"
 		},
 		"categories": {
 			"main": "/categories",
@@ -40,5 +43,8 @@
 		"validation_token_expire_seconds": 300,
 		"reset_password_token_expire_seconds": 300,
 		"reset_password_code_length": 8
+	},
+	"socializing": {
+		"user_publicity_default": true
 	}
 }

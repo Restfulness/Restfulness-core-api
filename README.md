@@ -75,10 +75,11 @@ Before running the app, make sure to check all values in `config.json` file.
 
 * **Default values:**
 
-      * _reset password token expire time_ = 300 seconds
-      * _verify random code token expire time_ = 300 seconds
-      * _reset password code length_ = 8
-      * _serializer secret key_ = "VERY_SECRET" _#Should be changed!!!_
+  * _reset password token expire time_ = 300 seconds
+  * _verify random code token expire time_ = 300 seconds
+  * _reset password code length_ = 8
+  * _serializer secret key_ = "VERY_SECRET" _#Should be changed!!!_
+  * _socializing date format_ = %Y-%m-%d %H:%M _#YYYY-MM-DD hh:mm_
 
 * **SMTP:**
 

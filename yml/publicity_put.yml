@@ -1,0 +1,51 @@
+Update publicity for owner of current token
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+tags:
+  - name: "User"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+  - name: body
+    in: body
+    required: true
+    schema:
+      properties:
+        publicity:
+          type: boolean
+          required: true
+        
+responses:
+  200:
+    description: "Publicity updated."
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Publicity updated."
+      example:
+        msg: "Publicity updated."
+  500:
+    description: "Server Error!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Server Error!"
+      example:
+        msg: "Server Error!"
