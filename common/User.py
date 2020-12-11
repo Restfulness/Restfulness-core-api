@@ -1,6 +1,11 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
 from sqlalchemy.sql import func
+import json
+
+with open('config.json', mode='r') as config_file:
+    USER_PUBLICITY = json.load(config_file).get(
+        'socializing', {}).get('user_publicity_default')
 
 
 class User(db.Model):
@@ -14,7 +19,7 @@ class User(db.Model):
     time_created = db.Column(db.DateTime(timezone=True),
                              server_default=func.now())
     time_profile_updated = db.Column(db.DateTime)
-    is_public = db.Column(db.Boolean, default=True)
+    is_public = db.Column(db.Boolean, default=USER_PUBLICITY)
     time_new_link_added = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):

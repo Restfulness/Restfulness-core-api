@@ -45,6 +45,7 @@
 		"reset_password_code_length": 8
 	},
 	"socializing": {
-		"date_format": "%Y-%m-%d %H:%M"
+		"date_format": "%Y-%m-%d %H:%M",
+		"user_publicity_default": true
 	}
 }
