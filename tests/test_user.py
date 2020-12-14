@@ -457,7 +457,7 @@ def test_update_user_publicity_to_true_accepted(client):
     assert res.status_code == 200
 
 
-def test_get_user_activity_accepted(client):
+def test_get_user_activity_with_date_accepted(client):
     """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
     -X POST -d '{"date_from": "2020-12-1 16:09"}' localhost:5000/user/activity
     """
@@ -476,6 +476,25 @@ def test_get_user_activity_accepted(client):
     global NEW_CREATED_USER_ID
     NEW_CREATED_USER_ID = json.loads(
         res.get_data(as_text=True))[0]['user_id']
+    assert res.status_code == 200
+
+
+def test_get_user_activity_without_date_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X POST -d '{}' localhost:5000/user/activity
+    """
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {}
+
+    res = client.post(
+        USER_ACTIVITY_ROUTE,
+        headers=headers,
+        data=json.dumps(data)
+    )
+
     assert res.status_code == 200
 
 
