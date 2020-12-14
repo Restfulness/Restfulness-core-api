@@ -282,22 +282,26 @@ class DbHandler():
         return 'OK'
 
     @staticmethod
-    def get_users_activity_list(date_from: str) -> list:
+    def get_users_activity_list(date_from: str = None) -> list:
         """ Return users activity as a list, starting
-        from `date_from` parameter. """
-        try:
-            date_from_object = datetime.strptime(
-                date_from,
-                DATE_FORMAT
-            )
-        except ValueError:
-            return('WRONG_FORMAT')
-
+        from `date_from` parameter (If provided) """
         users_list = db.session.\
             query(User.id, User.username, User.time_new_link_added).\
-            filter(User.time_new_link_added > date_from_object,
-                   User.is_public).order_by(User.time_new_link_added.desc()).\
-            all()
+            filter(User.is_public, User.time_new_link_added).\
+            order_by(User.time_new_link_added.desc())
+
+        if date_from is None:
+            users_list = users_list.all()
+        else:
+            try:
+                date_from_object = datetime.strptime(
+                    date_from,
+                    DATE_FORMAT
+                )
+            except ValueError:
+                return('WRONG_FORMAT')
+            users_list = users_list.filter(
+                User.time_new_link_added > date_from_object).all()
 
         if not users_list:
             return('NOT_FOUND')
@@ -305,8 +309,13 @@ class DbHandler():
         users_activity = []
         for user in users_list:
             total_num_of_links = Link.query.\
-                filter(Link.time_created > date_from,
-                       Link.owner_id == user[0]).count()
+                filter(Link.owner_id == user[0])
+            if date_from is None:
+                total_num_of_links = total_num_of_links.count()
+            else:
+                total_num_of_links = total_num_of_links.filter(
+                    Link.time_created > date_from).count()
+
             users_activity.append(dict(
                 user_id=user[0],
                 username=user[1],
