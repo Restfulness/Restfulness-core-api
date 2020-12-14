@@ -6,15 +6,15 @@ from flasgger import swag_from
 from common.DbHandler import DbHandler
 
 parser = reqparse.RequestParser(bundle_errors=True)
-parser.add_argument('date_from', type=str, required=True)
+parser.add_argument('date_from', type=str)
 
 
 class Activity(Resource):
     @jwt_required
     @swag_from('../../../yml/socializing/activity_get.yml')
     def post(self):
-        """ Return users activities from a special date. """
-        args = parser.parse_args()
+        """ Return users activities from a special date (If provided). """
+        args = parser.parse_args(strict=True)
         date_from = args['date_from']
 
         activity_list = DbHandler.get_users_activity_list(date_from)

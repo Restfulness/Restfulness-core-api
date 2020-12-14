@@ -1,4 +1,4 @@
-Return public users activities, starting from given time
+Return public users activities, starting from given time (Optional)
 ---
 openapi: 3.0.0
 components:
@@ -23,15 +23,12 @@ parameters:
     in: body
     required: true
     schema:
-      required:
-        - date_from
       properties:
         date_from:
           type: string
-          description: "Starting date with this format: YYYY-MM-DD hh:mm"
+          description: "Starting date with this format: YYYY-MM-DD hh:mm `Optional`"
           example: "2020-12-05 19:12"
 
-        
 responses:
   200:
     description: "Return activities list"
