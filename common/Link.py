@@ -9,7 +9,7 @@ class Link(db.Model):
     and a many-to-many relationship to Category
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    url = db.Column(db.String(50))
+    url = db.Column(db.String(350))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     categories = db.relationship(
         'Category',
