@@ -283,6 +283,42 @@ def test_get_link_by_id_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_link_by_pagination_accepted(client):
+    """curl -i -H "Authorization: Bearer $x" -X GET
+    "localhost:5000/links?page=100&page_size=2"
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_MAIN_ROUTE}?page=1&page_size=2',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_pagination_not_found_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_MAIN_ROUTE}?page=1000&page_size=2',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_get_link_by_pagination_exceed_limit_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_MAIN_ROUTE}?page=1&page_size=100000',
+        headers=headers
+    )
+    assert res.status_code == 400
+
+
 def test_get_categories_accepted(client):
     """curl -i -H "Authorization: Bearer $x"
     -X GET localhost:5000/categories"""
