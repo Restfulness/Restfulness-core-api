@@ -8,7 +8,12 @@ from common.Category import Category
 from db import db
 
 from datetime import datetime
+import json
 
+# Load config file
+with open('config.json', mode='r') as config_file:
+    MAX_LINKS_PER_PAGE = json.load(config_file).get('pagination', {}).\
+        get('maximum_links_per_page')
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 
@@ -104,9 +109,10 @@ class DbHandler():
 
     @staticmethod
     def get_links(user_id: int, link_id: int = None,
+                  page: int = 1, page_size: int = MAX_LINKS_PER_PAGE,
                   date_from: DateTime = None) -> list:
         """ Return links by their Id, their created date
-        or all of the links if those two are not provided.
+        or paginated links if those two are not provided.
         """
         if link_id is not None:
             link_objects = Link.query.filter_by(
@@ -116,10 +122,12 @@ class DbHandler():
         elif date_from is not None:
             link_objects = Link.query.filter(Link.owner_id == user_id).\
                 filter(Link.time_created > date_from).\
-                order_by(Link.time_created.desc()).all()
+                order_by(Link.time_created.desc()).\
+                paginate(page, page_size, False).items
         else:
             link_objects = Link.query.filter_by(owner_id=user_id).\
-                order_by(Link.time_created.desc()).all()
+                order_by(Link.time_created.desc()).\
+                paginate(page, page_size, False).items
 
         if not link_objects:
             return('LINK_NOT_FOUND')

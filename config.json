@@ -46,5 +46,8 @@
 	},
 	"socializing": {
 		"user_publicity_default": true
+	},
+	"pagination": {
+		"maximum_links_per_page": 10
 	}
 }
