@@ -19,6 +19,16 @@ parameters:
     description: "Send like this: Bearer [TOKEN]"
     type: string
     required: true
+  - name: "page"
+    in: "query"
+    description: "Which page do want to get"
+    required: false
+    type: "integer"
+  - name: "page_size"
+    in: "query"
+    description: "the number of links in each page"
+    required: false
+    type: "integer"
   - name: body
     in: body
     required: true
@@ -53,13 +63,13 @@ responses:
               {"user_id": 31, "username": "test2@yahoo.com", "total_links_added_after_given_time": 8, "last_link_added_date": "2020-12-11 05:37"}
             ]
   400:
-    description: "Input does not match format 'YYYY-MM-DD hh:mm'"
+    description: "Input does not match format 'YYYY-MM-DD hh:mm' OR Requested page size is larger than our max limit!"
     schema:
       type: object
       properties:
         msg:
           type: string
-          description: "Input does not match format 'YYYY-MM-DD hh:mm'"
+          description: "Input does not match format 'YYYY-MM-DD hh:mm' OR Requested page size is larger than our max limit!"
       example:
         msg: "Input does not match format 'YYYY-MM-DD hh:mm'"
   404:

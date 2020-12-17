@@ -515,6 +515,76 @@ def test_get_user_activity_with_date_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_user_activities_paginated_without_date_accepted(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_activities_paginated_with_date_accepted(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 16:09"}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_activities_paginated_not_found_rejected(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 16:09"}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1000&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
+
+
+def test_get_user_activities_paginated_exceed_limit_rejected(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-12-1 16:09"}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=100000',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
+
+
+def test_get_user_activities_paginated_invalid_date_rejected(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-14-7 16:09"}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=100000',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
+
+
 def test_get_user_activity_without_date_accepted(client):
     """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
     -X POST -d '{}' localhost:5000/user/activity
