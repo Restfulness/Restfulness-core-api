@@ -12,8 +12,11 @@ import json
 
 # Load config file
 with open('config.json', mode='r') as config_file:
-    MAX_LINKS_PER_PAGE = json.load(config_file).get('pagination', {}).\
-        get('maximum_links_per_page')
+    PAGINATION_CONFIGS = json.load(config_file).get('pagination', {})
+    MAX_LINKS_PER_PAGE = PAGINATION_CONFIGS.get('maximum_links_per_page')
+    MAX_ACTIVITIES_PER_PAGE = PAGINATION_CONFIGS.\
+        get('maximum_activities_per_page')
+
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 
 
@@ -290,8 +293,10 @@ class DbHandler():
         return 'OK'
 
     @staticmethod
-    def get_users_activity_list(date_from: str = None) -> list:
-        """ Return users activity as a list, starting
+    def get_users_activity_list(page: int = 1,
+                                page_size: int = MAX_ACTIVITIES_PER_PAGE,
+                                date_from: str = None) -> list:
+        """ Return users activities paginated as a list, starting
         from `date_from` parameter (If provided) """
         users_list = db.session.\
             query(User.id, User.username, User.time_new_link_added).\
@@ -299,7 +304,7 @@ class DbHandler():
             order_by(User.time_new_link_added.desc())
 
         if date_from is None:
-            users_list = users_list.all()
+            users_list = users_list.paginate(page, page_size, False).items
         else:
             try:
                 date_from_object = datetime.strptime(
@@ -309,7 +314,8 @@ class DbHandler():
             except ValueError:
                 return('WRONG_FORMAT')
             users_list = users_list.filter(
-                User.time_new_link_added > date_from_object).all()
+                User.time_new_link_added > date_from_object).\
+                paginate(page, page_size, False).items
 
         if not users_list:
             return('NOT_FOUND')

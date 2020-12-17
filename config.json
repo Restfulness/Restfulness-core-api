@@ -48,6 +48,7 @@
 		"user_publicity_default": true
 	},
 	"pagination": {
-		"maximum_links_per_page": 10
+		"maximum_links_per_page": 10,
+		"maximum_activities_per_page": 12
 	}
 }
