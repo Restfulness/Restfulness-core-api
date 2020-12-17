@@ -37,6 +37,7 @@ NEW_CREATED_LINK_ID = ""
 NEW_CREATED_CATEGORY_ID = ""
 NEW_CATEGORIES = ["test_1", "test_2"]
 NEW_CREATED_USER_ID = ""
+VALID_DATE = "2020-12-1 16:09"
 
 
 def generate_random_string(length):
@@ -501,7 +502,7 @@ def test_get_user_activity_with_date_accepted(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 16:09"}
+    data = {"date_from": VALID_DATE}
 
     res = client.post(
         USER_ACTIVITY_ROUTE,
@@ -534,7 +535,7 @@ def test_get_user_activities_paginated_with_date_accepted(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 16:09"}
+    data = {"date_from": VALID_DATE}
     res = client.post(
         f'{USER_ACTIVITY_ROUTE}?page=1&page_size=1',
         headers=headers,
@@ -548,7 +549,7 @@ def test_get_user_activities_paginated_not_found_rejected(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 16:09"}
+    data = {"date_from": VALID_DATE}
     res = client.post(
         f'{USER_ACTIVITY_ROUTE}?page=1000&page_size=1',
         headers=headers,
@@ -562,7 +563,7 @@ def test_get_user_activities_paginated_exceed_limit_rejected(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 16:09"}
+    data = {"date_from": VALID_DATE}
     res = client.post(
         f'{USER_ACTIVITY_ROUTE}?page=1&page_size=100000',
         headers=headers,
@@ -666,7 +667,7 @@ def test_get_public_user_links_with_date_accepted(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 15:00"}
+    data = {"date_from": VALID_DATE}
 
     res = client.post(
         address,
@@ -684,7 +685,7 @@ def test_get_public_user_links_user_not_found_rejected(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 15:00"}
+    data = {"date_from": VALID_DATE}
 
     res = client.post(
         address,
@@ -728,6 +729,78 @@ def test_get_public_user_links_no_link_found_rejected(client):
         data=json.dumps(data)
     )
     assert res.status_code == 404
+
+
+def test_get_public_user_links_paginated_accepted(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {}
+
+    res = client.post(
+        f'{address}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_public_user_links_paginated_with_date_accepted(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+
+    res = client.post(
+        f'{address}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_public_user_links_paginated_not_found_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+
+    res = client.post(
+        f'{address}?page=10000&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
+
+
+def test_get_public_user_links_paginated_exceed_limit_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+
+    res = client.post(
+        f'{address}?page=1&page_size=10000',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
 
 
 def test_delete_link_by_id_accepted(client):
