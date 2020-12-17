@@ -341,7 +341,10 @@ class DbHandler():
         return(users_activity)
 
     @staticmethod
-    def get_public_user_links(user_id: int, date_from: str = None) -> list:
+    def get_public_user_links(user_id: int,
+                              page: int = 1,
+                              page_size: int = MAX_LINKS_PER_PAGE,
+                              date_from: str = None) -> list:
         user_status = User.query.with_entities(User.is_public).\
             filter_by(id=user_id).first()
 
@@ -359,9 +362,10 @@ class DbHandler():
             except ValueError:
                 return('WRONG_DATE_FORMAT')
 
-            return(DbHandler.get_links(user_id, date_from=date_from_object))
+            return(DbHandler.get_links(user_id, page=page, page_size=page_size,
+                                       date_from=date_from_object))
 
-        return(DbHandler.get_links(user_id))
+        return(DbHandler.get_links(user_id, page=page, page_size=page_size))
 
     @staticmethod
     def get_user_publicity(user_id: int) -> bool:
