@@ -1,5 +1,5 @@
-from flask_restful import Resource
-from flask import jsonify, make_response, request
+from flask_restful import Resource, reqparse
+from flask import jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
 
@@ -12,6 +12,11 @@ with open('config.json', mode='r') as config_file:
         get('maximum_links_per_page')
 
 
+parser = reqparse.RequestParser(bundle_errors=True)
+parser.add_argument('page', type=int, location='args')
+parser.add_argument('page_size', type=int, location='args')
+
+
 class LinksGetter(Resource):
     @jwt_required
     @swag_from('../../yml/links_get.yml')
@@ -19,12 +24,12 @@ class LinksGetter(Resource):
         """ If client requests for /links will get paginated links;
         else if requests for /links/[ID] will get specified link.
         """
+        args = parser.parse_args()
         user_id = DbHandler.get_user_id(get_jwt_identity())
+        page = args['page']
+        page_size = args['page_size']
 
-        query_args = request.args
-        if query_args.get('page', None) and query_args.get('page_size', None):
-            page = int(query_args.get('page'))
-            page_size = int(query_args.get('page_size'))
+        if page and page_size:
             if page_size > MAX_LINKS_PER_PAGE:
                 return make_response(
                     jsonify(msg="Requested page size " +
