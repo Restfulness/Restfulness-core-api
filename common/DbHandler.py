@@ -219,14 +219,16 @@ class DbHandler():
         return links_values
 
     @staticmethod
-    def get_links_by_pattern(username: str, pattern: str) -> list:
+    def get_links_by_pattern(username: str, pattern: str,
+                             page: int = 1,
+                             page_size: int = MAX_LINKS_PER_PAGE) -> list:
         user_id = DbHandler.get_user_id(username)
         search_pattern = f'%{pattern}%'
 
         link_objects = Link.query.filter(Link.owner_id == user_id).\
             filter(Link.url.like(search_pattern)).order_by(
                 Link.time_created.desc()
-            ).all()
+            ).paginate(page, page_size, False).items
 
         if not link_objects:
             return 'PATTERN_NOT_FOUND'
