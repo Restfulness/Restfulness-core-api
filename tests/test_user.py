@@ -387,6 +387,39 @@ def test_get_links_by_search_valid_data_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_links_by_search_paginated_valid_data_accepted(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google?page=1&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_links_by_search_paginated_exceed_limit_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google?page=1&page_size=10000',
+        headers=headers
+    )
+    assert res.status_code == 400
+
+
+def test_get_links_by_search_paginated_not_found_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google?page=10000&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
 def test_get_links_by_search_invalid_data_rejected(client):
     """curl -i -H "Authorization: Bearer $x"
     -X GET localhost:5000/links/search/"test" """
