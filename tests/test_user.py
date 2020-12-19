@@ -374,6 +374,44 @@ def test_get_link_by_category_id_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_link_by_category_id_paginated_accepted(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/category/22?page=1&page_size=1"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}' +
+        '?page=1&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_category_id_paginated_not_found_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}' +
+        '?page=10000&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_get_link_by_category_id_paginated_exceed_limit_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}' +
+        '?page=1&page_size=100000',
+        headers=headers
+    )
+    assert res.status_code == 400
+
+
 def test_get_links_by_search_valid_data_accepted(client):
     """curl -i -H "Authorization: Bearer $x"
     -X GET localhost:5000/links/search/"test" """
