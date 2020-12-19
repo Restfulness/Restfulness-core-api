@@ -185,7 +185,9 @@ class DbHandler():
             return 'ID_NOT_FOUND'
 
     @staticmethod
-    def get_links_by_category(username: str, category_id: int) -> list:
+    def get_links_by_category(username: str, category_id: int,
+                              page: int = 1,
+                              page_size: int = MAX_LINKS_PER_PAGE) -> list:
         user_id = DbHandler.get_user_id(username)
 
         link_objects = db.session.query(Link).\
@@ -193,13 +195,14 @@ class DbHandler():
             filter(Link.owner_id == user_id).\
             filter(Category.id == category_id).\
             order_by(Link.time_created.desc()).\
-            all()
+            paginate(page, page_size, False).items
 
         requested_category_object = Category.query.filter_by(
             id=category_id
         ).first()
 
-        if requested_category_object is None:
+        if (requested_category_object is None) or\
+                not link_objects:
             return 'CATEGORY_NOT_FOUND'
 
         links_values = {
