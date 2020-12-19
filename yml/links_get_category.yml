@@ -22,6 +22,16 @@ parameters:
     description: "Category id to get"
     required: true
     type: "integer"
+  - name: "page"
+    in: "query"
+    description: "Which page do want to get"
+    required: false
+    type: "integer"
+  - name: "page_size"
+    in: "query"
+    description: "the number of links in each page"
+    required: false
+    type: "integer"
 example:
   Authorization: "Bearer eyJ0eXAiOi...."
   id: 1
@@ -56,7 +66,16 @@ responses:
             {id: 7, url: "http://geekforgeeks.com"},
             {id: 11, url: "http://developer.com"}
           ]
-        
+  400:
+    description: "Requested page size is larger than our max limit!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Requested page size is larger than our max limit!
+      example:
+        msg: Requested page size is larger than our max limit!
   404:
     description: "Category ID not found"
     schema:
