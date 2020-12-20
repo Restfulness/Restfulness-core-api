@@ -37,6 +37,7 @@ NEW_CREATED_LINK_ID = ""
 NEW_CREATED_CATEGORY_ID = ""
 NEW_CATEGORIES = ["test_1", "test_2"]
 NEW_CREATED_USER_ID = ""
+VALID_DATE = "2020-12-1 16:09"
 
 
 def generate_random_string(length):
@@ -283,6 +284,42 @@ def test_get_link_by_id_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_link_by_pagination_accepted(client):
+    """curl -i -H "Authorization: Bearer $x" -X GET
+    "localhost:5000/links?page=100&page_size=2"
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_MAIN_ROUTE}?page=1&page_size=2',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_pagination_not_found_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_MAIN_ROUTE}?page=1000&page_size=2',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_get_link_by_pagination_exceed_limit_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_MAIN_ROUTE}?page=1&page_size=100000',
+        headers=headers
+    )
+    assert res.status_code == 400
+
+
 def test_get_categories_accepted(client):
     """curl -i -H "Authorization: Bearer $x"
     -X GET localhost:5000/categories"""
@@ -337,6 +374,44 @@ def test_get_link_by_category_id_accepted(client):
     assert res.status_code == 200
 
 
+def test_get_link_by_category_id_paginated_accepted(client):
+    """curl -i -H "Authorization: Bearer $x"
+    -X GET localhost:5000/links/category/22?page=1&page_size=1"""
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}' +
+        '?page=1&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_link_by_category_id_paginated_not_found_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}' +
+        '?page=10000&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 404
+
+
+def test_get_link_by_category_id_paginated_exceed_limit_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_CATEGORY_ROUTE}/{NEW_CREATED_CATEGORY_ID}' +
+        '?page=1&page_size=100000',
+        headers=headers
+    )
+    assert res.status_code == 400
+
+
 def test_get_links_by_search_valid_data_accepted(client):
     """curl -i -H "Authorization: Bearer $x"
     -X GET localhost:5000/links/search/"test" """
@@ -348,6 +423,39 @@ def test_get_links_by_search_valid_data_accepted(client):
         headers=headers
     )
     assert res.status_code == 200
+
+
+def test_get_links_by_search_paginated_valid_data_accepted(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google?page=1&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_get_links_by_search_paginated_exceed_limit_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google?page=1&page_size=10000',
+        headers=headers
+    )
+    assert res.status_code == 400
+
+
+def test_get_links_by_search_paginated_not_found_rejected(client):
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.get(
+        f'{LINKS_BY_SEARCH_ROUTE}/google?page=10000&page_size=1',
+        headers=headers
+    )
+    assert res.status_code == 404
 
 
 def test_get_links_by_search_invalid_data_rejected(client):
@@ -465,7 +573,7 @@ def test_get_user_activity_with_date_accepted(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 16:09"}
+    data = {"date_from": VALID_DATE}
 
     res = client.post(
         USER_ACTIVITY_ROUTE,
@@ -477,6 +585,76 @@ def test_get_user_activity_with_date_accepted(client):
     NEW_CREATED_USER_ID = json.loads(
         res.get_data(as_text=True))[0]['user_id']
     assert res.status_code == 200
+
+
+def test_get_user_activities_paginated_without_date_accepted(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_activities_paginated_with_date_accepted(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_user_activities_paginated_not_found_rejected(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1000&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
+
+
+def test_get_user_activities_paginated_exceed_limit_rejected(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=100000',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
+
+
+def test_get_user_activities_paginated_invalid_date_rejected(client):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": "2020-14-7 16:09"}
+    res = client.post(
+        f'{USER_ACTIVITY_ROUTE}?page=1&page_size=100000',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
 
 
 def test_get_user_activity_without_date_accepted(client):
@@ -560,7 +738,7 @@ def test_get_public_user_links_with_date_accepted(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 15:00"}
+    data = {"date_from": VALID_DATE}
 
     res = client.post(
         address,
@@ -578,7 +756,7 @@ def test_get_public_user_links_user_not_found_rejected(client):
         'Content-Type': 'application/json',
         'Authorization': f"Bearer {TOKEN}"
     }
-    data = {"date_from": "2020-12-1 15:00"}
+    data = {"date_from": VALID_DATE}
 
     res = client.post(
         address,
@@ -622,6 +800,78 @@ def test_get_public_user_links_no_link_found_rejected(client):
         data=json.dumps(data)
     )
     assert res.status_code == 404
+
+
+def test_get_public_user_links_paginated_accepted(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {}
+
+    res = client.post(
+        f'{address}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_public_user_links_paginated_with_date_accepted(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+
+    res = client.post(
+        f'{address}?page=1&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 200
+
+
+def test_get_public_user_links_paginated_not_found_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+
+    res = client.post(
+        f'{address}?page=10000&page_size=1',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 404
+
+
+def test_get_public_user_links_paginated_exceed_limit_rejected(client):
+    address = LINKS_BY_USER_ID.replace(
+        '<int:id>', str(NEW_CREATED_USER_ID)
+    )
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    data = {"date_from": VALID_DATE}
+
+    res = client.post(
+        f'{address}?page=1&page_size=10000',
+        headers=headers,
+        data=json.dumps(data)
+    )
+    assert res.status_code == 400
 
 
 def test_delete_link_by_id_accepted(client):

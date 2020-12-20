@@ -17,6 +17,16 @@ parameters:
     description: "Send like this: Bearer [TOKEN]"
     type: string
     required: true
+  - name: "page"
+    in: "query"
+    description: "Which page do want to get"
+    required: false
+    type: "integer"
+  - name: "page_size"
+    in: "query"
+    description: "the number of links in each page"
+    required: false
+    type: "integer"
   - name: "id"
     in: "path"
     description: "Link id to get"
@@ -59,8 +69,18 @@ responses:
         url: https://stackoverflow.com
         id: 2
         added_date: "2020-12-07 12:28"
+  400:
+    description: "Requested page size is larger than our max limit!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Requested page size is larger than our max limit!
+      example:
+        msg: Requested page size is larger than our max limit!
   404:
-    description: "Link ID not found"
+    description: "Link not found!"
     schema:
       type: object
       properties:

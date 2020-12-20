@@ -86,6 +86,12 @@ Before running the app, make sure to check all values in `config.json` file.
   If you want to be able to enable sending Email part, you have to configure `SMTP` part in config file.
   (If you don't have any service, you can use [Google's Free SMTP Server](https://www.siteground.com/kb/google_free_smtp_server/), but if you are using this, please make sure to [Enable less secure apps to access Gmail](https://hotter.io/docs/email-accounts/secure-app-gmail/)).
 
+* **Pagination:**
+
+  * _maximum links per page_ = 10
+
+	*	_maximum activities per page_ = 12
+
 
 ### Tests
 

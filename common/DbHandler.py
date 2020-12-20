@@ -8,6 +8,14 @@ from common.Category import Category
 from db import db
 
 from datetime import datetime
+import json
+
+# Load config file
+with open('config.json', mode='r') as config_file:
+    PAGINATION_CONFIGS = json.load(config_file).get('pagination', {})
+    MAX_LINKS_PER_PAGE = PAGINATION_CONFIGS.get('maximum_links_per_page')
+    MAX_ACTIVITIES_PER_PAGE = PAGINATION_CONFIGS.\
+        get('maximum_activities_per_page')
 
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 
@@ -104,9 +112,10 @@ class DbHandler():
 
     @staticmethod
     def get_links(user_id: int, link_id: int = None,
+                  page: int = 1, page_size: int = MAX_LINKS_PER_PAGE,
                   date_from: DateTime = None) -> list:
         """ Return links by their Id, their created date
-        or all of the links if those two are not provided.
+        or paginated links if those two are not provided.
         """
         if link_id is not None:
             link_objects = Link.query.filter_by(
@@ -116,10 +125,12 @@ class DbHandler():
         elif date_from is not None:
             link_objects = Link.query.filter(Link.owner_id == user_id).\
                 filter(Link.time_created > date_from).\
-                order_by(Link.time_created.desc()).all()
+                order_by(Link.time_created.desc()).\
+                paginate(page, page_size, False).items
         else:
             link_objects = Link.query.filter_by(owner_id=user_id).\
-                order_by(Link.time_created.desc()).all()
+                order_by(Link.time_created.desc()).\
+                paginate(page, page_size, False).items
 
         if not link_objects:
             return('LINK_NOT_FOUND')
@@ -174,7 +185,9 @@ class DbHandler():
             return 'ID_NOT_FOUND'
 
     @staticmethod
-    def get_links_by_category(username: str, category_id: int) -> list:
+    def get_links_by_category(username: str, category_id: int,
+                              page: int = 1,
+                              page_size: int = MAX_LINKS_PER_PAGE) -> list:
         user_id = DbHandler.get_user_id(username)
 
         link_objects = db.session.query(Link).\
@@ -182,13 +195,14 @@ class DbHandler():
             filter(Link.owner_id == user_id).\
             filter(Category.id == category_id).\
             order_by(Link.time_created.desc()).\
-            all()
+            paginate(page, page_size, False).items
 
         requested_category_object = Category.query.filter_by(
             id=category_id
         ).first()
 
-        if requested_category_object is None:
+        if (requested_category_object is None) or\
+                not link_objects:
             return 'CATEGORY_NOT_FOUND'
 
         links_values = {
@@ -208,14 +222,16 @@ class DbHandler():
         return links_values
 
     @staticmethod
-    def get_links_by_pattern(username: str, pattern: str) -> list:
+    def get_links_by_pattern(username: str, pattern: str,
+                             page: int = 1,
+                             page_size: int = MAX_LINKS_PER_PAGE) -> list:
         user_id = DbHandler.get_user_id(username)
         search_pattern = f'%{pattern}%'
 
         link_objects = Link.query.filter(Link.owner_id == user_id).\
             filter(Link.url.like(search_pattern)).order_by(
                 Link.time_created.desc()
-            ).all()
+            ).paginate(page, page_size, False).items
 
         if not link_objects:
             return 'PATTERN_NOT_FOUND'
@@ -282,8 +298,10 @@ class DbHandler():
         return 'OK'
 
     @staticmethod
-    def get_users_activity_list(date_from: str = None) -> list:
-        """ Return users activity as a list, starting
+    def get_users_activity_list(page: int = 1,
+                                page_size: int = MAX_ACTIVITIES_PER_PAGE,
+                                date_from: str = None) -> list:
+        """ Return users activities paginated as a list, starting
         from `date_from` parameter (If provided) """
         users_list = db.session.\
             query(User.id, User.username, User.time_new_link_added).\
@@ -291,7 +309,7 @@ class DbHandler():
             order_by(User.time_new_link_added.desc())
 
         if date_from is None:
-            users_list = users_list.all()
+            users_list = users_list.paginate(page, page_size, False).items
         else:
             try:
                 date_from_object = datetime.strptime(
@@ -301,7 +319,8 @@ class DbHandler():
             except ValueError:
                 return('WRONG_FORMAT')
             users_list = users_list.filter(
-                User.time_new_link_added > date_from_object).all()
+                User.time_new_link_added > date_from_object).\
+                paginate(page, page_size, False).items
 
         if not users_list:
             return('NOT_FOUND')
@@ -327,7 +346,10 @@ class DbHandler():
         return(users_activity)
 
     @staticmethod
-    def get_public_user_links(user_id: int, date_from: str = None) -> list:
+    def get_public_user_links(user_id: int,
+                              page: int = 1,
+                              page_size: int = MAX_LINKS_PER_PAGE,
+                              date_from: str = None) -> list:
         user_status = User.query.with_entities(User.is_public).\
             filter_by(id=user_id).first()
 
@@ -345,9 +367,10 @@ class DbHandler():
             except ValueError:
                 return('WRONG_DATE_FORMAT')
 
-            return(DbHandler.get_links(user_id, date_from=date_from_object))
+            return(DbHandler.get_links(user_id, page=page, page_size=page_size,
+                                       date_from=date_from_object))
 
-        return(DbHandler.get_links(user_id))
+        return(DbHandler.get_links(user_id, page=page, page_size=page_size))
 
     @staticmethod
     def get_user_publicity(user_id: int) -> bool:
