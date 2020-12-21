@@ -147,8 +147,8 @@ class ResetPasswordCore:
         rendered template."""
         host = CONFIG.get('smtp', {}).get('host')
         port = CONFIG.get('smtp', {}).get('port')
-        sender_email = CONFIG.get('smtp', {}).get('email')
-        password = CONFIG.get('smtp', {}).get('password')
+        sender_email = CONFIG.get('smtp', {}).get('server_username')
+        password = CONFIG.get('smtp', {}).get('server_password')
 
         # For passing CI tests
         if host == 'your_host_address_here':

@@ -35,8 +35,8 @@
 	"smtp": {
 		"host": "your_host_address_here",
 		"port": 587,
-		"email": "your_email@some_where.com",
-		"password": "your_password"
+		"server_username": "your_username",
+		"server_password": "your_password"
 	},
 	"forget_password": {
 		"serializer_secret_key": "VERY_SECRET",
