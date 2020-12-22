@@ -4,7 +4,7 @@ from flask import jsonify, make_response
 
 from flasgger import swag_from
 
-from common.DbHandler import DbHandler
+from src.DbHandler import DbHandler
 
 # Login API request parser
 parser = reqparse.RequestParser(bundle_errors=True)

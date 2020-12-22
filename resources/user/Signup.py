@@ -4,7 +4,7 @@ from flask import jsonify, make_response
 from flasgger import swag_from
 import validators
 
-from common.DbHandler import DbHandler
+from src.DbHandler import DbHandler
 
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('username', type=str, required=True)

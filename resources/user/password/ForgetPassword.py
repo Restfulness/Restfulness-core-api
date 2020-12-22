@@ -3,7 +3,7 @@ from flask import jsonify, make_response
 
 from flasgger import swag_from
 
-from common.ResetPasswordCore import ResetPasswordCore
+from src.ResetPasswordCore import ResetPasswordCore
 
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('username', type=str, required=True)

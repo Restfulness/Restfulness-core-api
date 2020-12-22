@@ -1,16 +1,16 @@
-from typing import Text
-from common.DbHandler import DbHandler
-
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from jinja2 import Environment, FileSystemLoader
 
+from src.DbHandler import DbHandler
+
 import secrets
 import string
 import json
 import smtplib
+from typing import Text
 
 # Load config file to read Serializer secret key
 with open('config.json', mode='r') as config_file:
