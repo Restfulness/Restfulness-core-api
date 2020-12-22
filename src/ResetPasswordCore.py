@@ -182,6 +182,7 @@ class ResetPasswordCore:
     @staticmethod
     def __render_forget_password_page(random_code: str) -> Text:
         """ Using Jinja2 to render forget password email page. """
-        env = Environment(loader=FileSystemLoader('templates/'))
+        env = Environment(loader=FileSystemLoader('templates/'),
+                          autoescape=True)
         template = env.get_template('forget_password.html')
         return(template.render(code=random_code))
