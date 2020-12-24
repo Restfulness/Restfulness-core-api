@@ -1,16 +1,16 @@
-from typing import Text
-from common.DbHandler import DbHandler
-
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from jinja2 import Environment, FileSystemLoader
 
+from src.DbHandler import DbHandler
+
 import secrets
 import string
 import json
 import smtplib
+from typing import Text
 
 # Load config file to read Serializer secret key
 with open('config.json', mode='r') as config_file:
@@ -147,8 +147,8 @@ class ResetPasswordCore:
         rendered template."""
         host = CONFIG.get('smtp', {}).get('host')
         port = CONFIG.get('smtp', {}).get('port')
-        sender_email = CONFIG.get('smtp', {}).get('email')
-        password = CONFIG.get('smtp', {}).get('password')
+        sender_email = CONFIG.get('smtp', {}).get('server_username')
+        password = CONFIG.get('smtp', {}).get('server_password')
 
         # For passing CI tests
         if host == 'your_host_address_here':
@@ -182,6 +182,7 @@ class ResetPasswordCore:
     @staticmethod
     def __render_forget_password_page(random_code: str) -> Text:
         """ Using Jinja2 to render forget password email page. """
-        env = Environment(loader=FileSystemLoader('templates/'))
+        env = Environment(loader=FileSystemLoader('templates/'),
+                          autoescape=True)
         template = env.get_template('forget_password.html')
         return(template.render(code=random_code))
