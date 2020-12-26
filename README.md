@@ -1,16 +1,19 @@
-# Flask Restfulness
+# [Restfulness](https://restfulness.app)
 
-Another boilerplate for flask-restful web service (Including flask-sqlalchemy, flask-jwt, Swagger, Docker, ...)
+### Your team's social bookmarking app
 
-This project is going to be something like [Pocket](https://getpocket.com/) to save your favorite links.
+This project is going to be an opensource version of something like [Delicious](https://en.wikipedia.org/wiki/Delicious_(website)) to save and share your favorite bookmarks.
 
-Now you can save your favourite links, add category to them, return them by category or by looking
-for some special keyword in their URL, ...
+Now you can save your favourite bookmarks, categories them, return them by category or by looking for some special keyword in their URL, see your friends activities (If they are public), ...
+
+And last but not least, you can setup `Restfulness` on your own workspace, because both server and clients are opensource and ready for use.
 
 ### Production Environment (Using Docker)
 
 If you have `docker` and `docker-compose` installed, then simply you can run:
-(Make sure you are in root directory of project which is folder that contains `api.py`)
+
+(Make sure you are in root directory of project which is the folder that contains `api.py`)
+
 ```
 docker-compose up
 ```
@@ -89,8 +92,7 @@ Before running the app, make sure to check all values in `config.json` file.
 * **Pagination:**
 
   * _maximum links per page_ = 10
-
-	*	_maximum activities per page_ = 12
+  * _maximum activities per page_ = 12
 
 
 ### Tests
@@ -118,6 +120,11 @@ To see available APIs, go to http://localhost:5000/apidocs
   4. Server returns a token for resetting password, **If** user entered the correct 8 digit code.
   5. At last, Client sends a POST request to `/reset` endpoint, containing `Reset password token that is obtained from previous call` and `user's new password`.
   6. For more information, read [this](https://dev.to/theanam/otp-verification-without-any-database-4ja5). (To make long story short, we do this to pick up unnecessary pressure from our server.)
+
+### License
+
+**MIT**
+
 
 For more information read this:
 
