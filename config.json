@@ -8,7 +8,8 @@
 			"verify_code": "/user/password/verify",
 			"reset_password": "/user/password/reset",
 			"publicity": "/user/publicity",
-			"activity_list": "/user/activity"
+			"activity_list": "/user/activity",
+			"profile": "/user/profile"
 		},
 		"links":{
 			"main": "/links",
