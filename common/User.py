@@ -15,7 +15,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(32), unique=True)
     password_hash = db.Column(db.String(128))
-    links = db.relationship('Link', backref='owner')
+    links = db.relationship('Link', backref='owner',
+                            cascade="all, delete-orphan")
     time_created = db.Column(db.DateTime(timezone=True),
                              server_default=func.now())
     time_profile_updated = db.Column(db.DateTime)

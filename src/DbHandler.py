@@ -377,3 +377,11 @@ class DbHandler():
         """ Returns user's publicity. """
         return(User.query.with_entities(User.is_public).
                filter_by(id=user_id).first()[0])
+
+    @staticmethod
+    def delete_user_profile(username: str) -> str:
+        """ Delete user's profile. """
+        user_object = User.query.filter_by(username=username).first()
+        db.session.delete(user_object)
+        db.session.commit()
+        return "OK"

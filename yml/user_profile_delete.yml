@@ -1,0 +1,43 @@
+Deletes profile of the owner of current token, including the links.
+---
+openapi: 3.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+consumes:
+  "application/json"
+tags:
+  - name: "User"
+parameters:
+  - in: header
+    name: Authorization
+    description: "Send like this: Bearer [TOKEN]"
+    type: string
+    required: true
+
+responses:
+  200:
+    description: "User's profile deleted."
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "User's profile deleted."
+      example:
+        msg: "User's profile deleted."
+  500:
+    description: "Server Error!"
+    schema:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: "Server Error!"
+      example:
+        msg: "Server Error!"

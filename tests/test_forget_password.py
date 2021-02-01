@@ -20,6 +20,8 @@ USER_FORGET_PASSWORD = CONFIG.get('routes', {}).get('user', {}).get(
 USER_VERIFY_CODE = CONFIG.get('routes', {}).get('user', {}).get('verify_code')
 USER_RESET_PASSWORD = CONFIG.get('routes', {}).get('user', {}).get(
     'reset_password')
+USER_PROFILE_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
+    'profile')
 
 
 def generate_random_string(length):
@@ -233,6 +235,23 @@ def test_login_with_new_password_accepted(client):
         USER_LOGIN_ROUTE,
         data=json.dumps(data),
         headers=HEADERS
+    )
+
+    global TOKEN
+    TOKEN = json.loads(res.get_data(as_text=True))["access_token"]
+    assert res.status_code == 200
+
+
+def test_delete_user_profile_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X DELETE localhost:5000/user/profile
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.delete(
+        USER_PROFILE_ROUTE,
+        headers=headers
     )
 
     assert res.status_code == 200
