@@ -13,8 +13,7 @@ class Profile(Resource):
         """ Delete current user's profile """
         current_user_username = get_jwt_identity()
 
-        # status = DbHandler.update_user_publicity(current_user_username,
-        #                                         publicity)
+        status = DbHandler.delete_user_profile(current_user_username)
         if status == 'OK':
             return make_response(
                 jsonify(msg="User's profile deleted."),

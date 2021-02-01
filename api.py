@@ -11,6 +11,7 @@ from resources.user.password.VerifyCode import VerifyCode
 from resources.user.password.ResetPassword import ResetPassword
 from resources.user.Publicity import Publicity
 from resources.user.Socializing.Activity import Activity
+from resources.user.Profile import Profile
 
 from resources.links.LinksDeleter import LinksDeleter
 from resources.links.LinksAdder import LinksAdder
@@ -117,6 +118,10 @@ api.add_resource(
 api.add_resource(
     LinksByUserId,
     CONFIG.get('routes', {}).get('links', {}).get('by_user_id')
+)
+api.add_resource(
+    Profile,
+    CONFIG.get('routes', {}).get('user', {}).get('profile')
 )
 
 
