@@ -19,6 +19,8 @@ USER_PUBLICITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
     'publicity')
 USER_ACTIVITY_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
     'activity_list')
+USER_PROFILE_ROUTE = CONFIG.get('routes', {}).get('user', {}).get(
+    'profile')
 LINKS_MAIN_ROUTE = CONFIG.get('routes', {}).get('links', {}).get('main')
 CATEGORIES_MAIN_ROUTE = CONFIG.get(
     'routes', {}).get('categories', {}).get('main')
@@ -941,3 +943,31 @@ def test_update_categories_of_a_link_rejected(client):
         data=json.dumps(data)
     )
     assert res.status_code == 404
+
+
+def test_delete_user_profile_accepted(client):
+    """curl -i -H "Content-Type: application/json" -H "Authorization: Bearer $x"
+    -X DELETE localhost:5000/user/profile
+    """
+    headers = {
+        'Authorization': f"Bearer {TOKEN}"
+    }
+    res = client.delete(
+        USER_PROFILE_ROUTE,
+        headers=headers
+    )
+    assert res.status_code == 200
+
+
+def test_login_deleted_profile_failed(client):
+    """ User was deleted on previous call """
+    data = {
+        "username": USERNAME,
+        "password": PASSWORD
+    }
+    res = client.post(
+        USER_LOGIN_ROUTE,
+        data=json.dumps(data),
+        headers=HEADERS
+    )
+    assert res.status_code == 401
